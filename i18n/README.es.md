@@ -280,6 +280,27 @@ Ideas que quedarían geniales:
 
 Abre un *issue* con tu idea o envía un *pull request*. Antes, ejecuta `npm test`.
 
+
+<h2 align="center">Héroes de Git Quest 🛡️</h2>
+
+<table align="center" style="background-color: #121212; border-radius: 10px; border: none;">
+  <tr>
+    <!-- Card do Criador (Bruno) -->
+    <td align="center" width="220" style="padding: 15px; border: 1px solid #FFD700; border-radius: 8px;">
+      <a href="https://github.com/bruno-a-dias">
+        <img src="https://github.com/bruno-a-dias.png" width="120px;" style="border-radius: 50%; border: 3px solid #FFD700;" alt="Foto de Bruno Assunção Dias"/><br />
+        <br />
+        <sub><b style="font-size: 16px; color: #FFFFFF;">Bruno Assunção Dias</b></sub>
+      </a><br />
+      <span style="color: #FFD700; font-weight: bold;">👑 Creador / Mantenedor</span><br />
+      <sub style="color: #A0A0A0;">DevQuest / Git Quest</sub>
+    </td>
+
+    <!-- NOVO_CONTRIBUIDOR_AQUI -->
+
+  </tr>
+</table>
+
 ---
 
 ## 👨‍🏫 Autor

@@ -290,7 +290,7 @@ Ideias que ficariam ótimas:
 - [ ] Mais idiomas (japonês, árabe, chinês…)
 - [ ] Novos cenários além da *Pizzaria do Zé*
 
-Abra uma *issue* com a ideia ou envie um *pull request*. Antes, rode `npm test`.
+Abra uma *issue* com a ideia ou envie um *pull request*. Antes, rode `npm test` e leia o [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 
 <h2 align="center">Heróis do Git Quest 🛡️</h2>
