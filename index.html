@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Git Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true">
+        <path d="M6 34H40" stroke="#2dd4bf" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <path d="M15 34C23 34 21 13 30 13H40" stroke="#a78bfa" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <circle cx="6" cy="34" r="5" fill="#0a0f1e" stroke="#2dd4bf" stroke-width="3"/>
+        <circle cx="26" cy="34" r="5" fill="#0a0f1e" stroke="#2dd4bf" stroke-width="3"/>
+        <circle cx="40" cy="34" r="5" fill="#2dd4bf"/>
+        <circle cx="30" cy="13" r="5" fill="#0a0f1e" stroke="#a78bfa" stroke-width="3"/>
+        <circle cx="40" cy="13" r="5" fill="#a78bfa"/>
+      </svg>
+      <div>
+        <h1>Git Quest</h1>
+        <small>Aprenda Git jogando: 7 linhas, um comando por vez</small>
+      </div>
+    </div>
+    <div class="hud">
+      <div class="rank" id="rank"></div>
+      <div class="xpbox">
+        <div class="xpmeta tnum"><span id="xpnow">0 XP</span><span id="xpnext"></span></div>
+        <div class="xpbar" role="progressbar" aria-label="Experiência" id="xpbar"><div class="xpfill" id="xpfill"></div></div>
+      </div>
+      <span class="combo" id="combo" hidden></span>
+      <button class="btn sm" id="btnSound" aria-pressed="false" title="Ligar ou desligar os efeitos sonoros">Som: desligado</button>
+      <button class="btn sm" id="btnDiploma" hidden>Ver diploma</button>
+      <button class="btn sm" id="btnReset" title="Apaga o progresso deste navegador">Recomeçar tudo</button>
+    </div>
+  </header>
+
+  <main class="grid">
+    <div class="col col-l">
+      <section class="panel mission" id="mission" aria-live="polite"></section>
+      <section class="panel" aria-label="Mapa de linhas">
+        <h3>Mapa de linhas</h3>
+        <div id="metro"></div>
+      </section>
+    </div>
+
+    <div class="col col-m">
+      <section class="term" aria-label="Terminal simulado">
+        <div class="termbar">
+          <span class="lights" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span id="termpath">aluno@gitquest</span>
+          <span>terminal simulado</span>
+        </div>
+        <div class="termbody" id="termbody" tabindex="0" aria-label="Saída do terminal"></div>
+        <div class="quick" id="quick"></div>
+        <label class="inrow" for="cmd">
+          <span class="pr" id="prompt"></span>
+          <input id="cmd" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" placeholder="digite um comando e aperte Enter">
+        </label>
+      </section>
+    </div>
+
+    <div class="col col-r">
+      <section class="panel" aria-label="As quatro áreas do Git">
+        <h3>As áreas do Git</h3>
+        <div class="flow"><b>pasta</b><em>git add</em>&rarr;<b>staging</b><em>git commit</em>&rarr;<b>repositório</b><em>git push</em>&rarr;<b>remoto</b></div>
+        <div class="areas" id="areas"></div>
+      </section>
+      <section class="panel" aria-label="Mapa de commits">
+        <h3>Mapa de commits</h3>
+        <div class="graphwrap" id="graph"></div>
+      </section>
+      <section class="panel" aria-label="Conquistas">
+        <h3>Conquistas</h3>
+        <div class="badges" id="badges"></div>
+      </section>
+    </div>
+  </main>
+
+  <p class="foot">Simulador didático: os comandos rodam num Git de mentira dentro da página, nada é gravado no seu computador. Professor? Abra a página com <span class="mono">#professor</span> no final do endereço para liberar todas as missões.</p>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+
+<div class="diploma" id="diploma" hidden role="dialog" aria-modal="true" aria-label="Diploma Git Quest">
+  <div class="cert">
+    <small>Certificado de conclusão</small>
+    <h2>Git Quest</h2>
+    <p>Este diploma é concedido a</p>
+    <div><input class="name" id="certname" type="text" maxlength="60" placeholder="Digite seu nome" aria-label="Seu nome"></div>
+    <p id="certtxt"></p>
+    <div class="certb" id="certb"></div>
+    <p class="mono" id="certdate" style="font-size:13px"></p>
+    <p style="font-size:13px;color:var(--mute)">Tire um print desta tela para guardar o seu diploma.</p>
+    <div class="winacts" style="justify-content:center;margin-top:14px"><button class="btn pri" id="certclose">Voltar ao jogo</button></div>
+  </div>
+</div>
+
+<script src="js/git-engine.js"></script>
+<script src="js/missions.js"></script>
+<script src="js/core.js"></script>
+<script src="js/ui-panels.js"></script>
+<script src="js/ui-game.js"></script>
+</body>
+</html>
