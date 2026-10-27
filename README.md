@@ -32,9 +32,9 @@
 
 ## 🔗 Jogue agora
 
-| Onde | Link |
-|---|---|
-| 🟣 **Vercel** (principal) | [gitquestgame.vercel.app](https://gitquestgame.vercel.app/) |
+| Onde                          | Link                                                                          |
+| ----------------------------- | ----------------------------------------------------------------------------- |
+| 🟣 **Vercel** (principal)     | [gitquestgame.vercel.app](https://gitquestgame.vercel.app/)                   |
 | ⚫ **GitHub Pages** (espelho) | [bruno-a-dias.github.io/git-quest](https://bruno-a-dias.github.io/git-quest/) |
 
 Os dois endereços servem exatamente os mesmos arquivos. Se um estiver fora do ar, use o outro.
@@ -43,16 +43,16 @@ Os dois endereços servem exatamente os mesmos arquivos. Se um estiver fora do a
 
 ## 🎮 O que é isso?
 
-**Git Quest** é um jogo que roda no navegador e ensina Git do zero até o `git push`. Nada de slides cheios de comandos: o aluno recebe uma **história** (você acaba de ser contratado pela *Pizzaria do Zé*), um **objetivo** e um **terminal simulado** onde digita os comandos de verdade. O jogo confere o resultado, dá XP, sobe o nível e libera a próxima estação.
+**Git Quest** é um jogo que roda no navegador e ensina Git do zero até o `git push`. Nada de slides cheios de comandos: o aluno recebe uma **história** (você acaba de ser contratado pela _Pizzaria do Zé_), um **objetivo** e um **terminal simulado** onde digita os comandos de verdade. O jogo confere o resultado, dá XP, sobe o nível e libera a próxima estação.
 
 > 💡 **Nada é instalado e nada é gravado no computador.** Todo o Git roda dentro da página, num motor escrito em JavaScript puro. Errar é grátis, e é assim que se aprende.
 
-| 🕹️ Você faz | 🧠 O jogo faz |
-|---|---|
-| Digita `git add .` e `git commit -m "..."` | Atualiza as 4 áreas do Git **animadas** ao lado |
-| Cria uma branch e faz o merge | Desenha o **mapa de commits** com branches, tags e `HEAD` |
-| Provoca (e resolve) um conflito | Mostra os marcadores `<<<<<<<` exatamente como o Git real |
-| Pede ajuda com **Dica 1 → Dica 2 → Ver solução** | Reduz o XP, mas nunca deixa o aluno travado |
+| 🕹️ Você faz                                      | 🧠 O jogo faz                                             |
+| ------------------------------------------------ | --------------------------------------------------------- |
+| Digita `git add .` e `git commit -m "..."`       | Atualiza as 4 áreas do Git **animadas** ao lado           |
+| Cria uma branch e faz o merge                    | Desenha o **mapa de commits** com branches, tags e `HEAD` |
+| Provoca (e resolve) um conflito                  | Mostra os marcadores `<<<<<<<` exatamente como o Git real |
+| Pede ajuda com **Dica 1 → Dica 2 → Ver solução** | Reduz o XP, mas nunca deixa o aluno travado               |
 
 ---
 
@@ -71,15 +71,15 @@ flowchart LR
     G --> H["🏆 Diploma"]
 ```
 
-| Linha | Tema | O que o aluno aprende | Missões |
-|:--:|---|---|:--:|
-| 🟢 **1** | Primeiros passos | `git config`, `mkdir`, `cd`, `git init` | 3 |
-| 🟡 **2** | O ciclo básico | `touch`/`echo`, `git add`, `git commit`, as áreas do Git | 5 |
-| 🔴 **3** | Viagem no tempo | `git log`, `git diff`, `restore`, `commit --amend`, `revert`, `reflog` | 8 |
-| 🟣 **4** | Linhas paralelas | `git branch`, `git switch`, `git merge`, apagar branch | 5 |
-| 🟠 **5** | Zona de conflito | Conflito de merge e leitura dos marcadores | 2 |
-| 🔵 **6** | Gaveta e etiquetas | `git stash`, `git tag` | 3 |
-| 🟩 **7** | Rumo à nuvem | `git remote`, `push -u`, `pull`, `clone`, **chefe final** | 6 |
+|  Linha   | Tema               | O que o aluno aprende                                                  | Missões |
+| :------: | ------------------ | ---------------------------------------------------------------------- | :-----: |
+| 🟢 **1** | Primeiros passos   | `git config`, `mkdir`, `cd`, `git init`                                |    3    |
+| 🟡 **2** | O ciclo básico     | `touch`/`echo`, `git add`, `git commit`, as áreas do Git               |    5    |
+| 🔴 **3** | Viagem no tempo    | `git log`, `git diff`, `restore`, `commit --amend`, `revert`, `reflog` |    8    |
+| 🟣 **4** | Linhas paralelas   | `git branch`, `git switch`, `git merge`, apagar branch                 |    5    |
+| 🟠 **5** | Zona de conflito   | Conflito de merge e leitura dos marcadores                             |    2    |
+| 🔵 **6** | Gaveta e etiquetas | `git stash`, `git tag`                                                 |    3    |
+| 🟩 **7** | Rumo à nuvem       | `git remote`, `push -u`, `pull`, `clone`, **chefe final**              |    6    |
 
 **Total: 32 missões**, sendo 26 de comando e 6 quizzes relâmpago.
 
@@ -90,8 +90,8 @@ flowchart LR
 - 🖥️ **Terminal de verdade**: histórico com ↑ ↓, `Tab` completa comandos e arquivos, atalhos clicáveis (`ls`, `git status`, `git log --oneline`…) e sugestão de comando quando o aluno erra a digitação.
 - 🧩 **As 4 áreas do Git, animadas**: pasta de trabalho → staging → repositório → remoto. Os arquivos "voam" de uma área para outra a cada `add`, `commit` e `push`.
 - 🌿 **Mapa de commits ao vivo**: grafo estilo mapa de metrô com branches, tags, `HEAD` e o remoto, atualizado a cada comando.
-- ⚡ **XP, combo e ranks**: seis níveis, do *Estagiário(a) de commits* ao *Mestre(a) do Git*. Missões seguidas sem dica acendem o combo.
-- 🏅 **Conquistas**: *Primeiro commit*, *Viajante do tempo*, *Caçador de conflitos*, *Mestre da gaveta*, *Cabeça nas nuvens*, *Clonador*, *Chefão derrotado* e *Sem muletas*.
+- ⚡ **XP, combo e ranks**: seis níveis, do _Estagiário(a) de commits_ ao _Mestre(a) do Git_. Missões seguidas sem dica acendem o combo.
+- 🏅 **Conquistas**: _Primeiro commit_, _Viajante do tempo_, _Caçador de conflitos_, _Mestre da gaveta_, _Cabeça nas nuvens_, _Clonador_, _Chefão derrotado_ e _Sem muletas_.
 - 💡 **Dicas em três degraus**: Dica 1, Dica 2 e Ver solução (cada linha da solução é clicável e já cai no terminal).
 - 🎉 **Confete, sons e toasts** (o som vem desligado e o aluno liga se quiser).
 - 🎓 **Diploma final** com o nome do aluno, XP, título e conquistas, pronto para o print.
@@ -100,12 +100,12 @@ flowchart LR
 
 <div align="center">
 
-| Merge e mapa de commits | Resolvendo conflito |
-|:--:|:--:|
+|                                   Merge e mapa de commits                                    |                              Resolvendo conflito                               |
+| :------------------------------------------------------------------------------------------: | :----------------------------------------------------------------------------: |
 | <img src="docs/02-merge-grafo.png" alt="Merge fast-forward com mapa de commits" width="450"> | <img src="docs/03-conflito.png" alt="Missão de conflito de merge" width="450"> |
 
-| Rumo à nuvem (push) | Quiz relâmpago | No celular |
-|:--:|:--:|:--:|
+|                      Rumo à nuvem (push)                      |                        Quiz relâmpago                         |                           No celular                           |
+| :-----------------------------------------------------------: | :-----------------------------------------------------------: | :------------------------------------------------------------: |
 | <img src="docs/04-push.png" alt="Missão de push" width="300"> | <img src="docs/05-quiz.png" alt="Quiz relâmpago" width="300"> | <img src="docs/06-mobile.png" alt="Versão mobile" width="130"> |
 
 </div>
@@ -163,9 +163,9 @@ Roda duas suítes: a do **motor de Git** (mais de 100 verificações de comandos
 
 1. Envie o repositório para o GitHub.
 2. Vá em **Settings → Pages**.
-3. Em *Build and deployment*, escolha **Deploy from a branch**, branch `main` e pasta `/ (root)`.
+3. Em _Build and deployment_, escolha **Deploy from a branch**, branch `main` e pasta `/ (root)`.
 4. Em alguns minutos o jogo estará em `https://bruno-a-dias.github.io/git-quest/`.
-5. (Opcional) **Vercel:** importe o repositório em [vercel.com/new](https://vercel.com/new), deixe *Framework Preset* em **Other** e sem comando de build. A versão oficial deste projeto está em `https://gitquestgame.vercel.app/`.
+5. (Opcional) **Vercel:** importe o repositório em [vercel.com/new](https://vercel.com/new), deixe _Framework Preset_ em **Other** e sem comando de build. A versão oficial deste projeto está em `https://gitquestgame.vercel.app/`.
 
 ---
 
@@ -194,11 +194,16 @@ git-quest/
 Os scripts são clássicos (sem módulos) e **carregados nesta ordem**, porque compartilham escopo global:
 
 ```html
-<script src="js/git-engine.js"></script>  <!-- createGit()                       -->
-<script src="js/missions.js"></script>    <!-- WORLDS, MISSIONS, RANKS, BADGES  -->
-<script src="js/core.js"></script>        <!-- startMission, stepMission, ...   -->
-<script src="js/ui-panels.js"></script>   <!-- window.GQ                        -->
-<script src="js/ui-game.js"></script>     <!-- liga tudo e inicia o jogo        -->
+<script src="js/git-engine.js"></script>
+<!-- createGit()                       -->
+<script src="js/missions.js"></script>
+<!-- WORLDS, MISSIONS, RANKS, BADGES  -->
+<script src="js/core.js"></script>
+<!-- startMission, stepMission, ...   -->
+<script src="js/ui-panels.js"></script>
+<!-- window.GQ                        -->
+<script src="js/ui-game.js"></script>
+<!-- liga tudo e inicia o jogo        -->
 ```
 
 ### 🔬 O motor de Git
@@ -229,11 +234,11 @@ Os objetivos olham o **estado do repositório** (`ok(g, ctx)`), então vale qual
 
 ### 🧮 Pontuação
 
-| Situação | XP |
-|---|:--:|
-| Missão de comando (sem dicas) | **100** |
-| Cada dica usada | −25 (mínimo 20) |
-| Bônus: sem erros **e** sem dicas | **+25** |
+| Situação                               |        XP        |
+| -------------------------------------- | :--------------: |
+| Missão de comando (sem dicas)          |     **100**      |
+| Cada dica usada                        | −25 (mínimo 20)  |
+| Bônus: sem erros **e** sem dicas       |     **+25**      |
 | Quiz na 1ª tentativa / 2ª / 3ª ou mais | **50 / 25 / 10** |
 
 Os ranks sobem em frações do total de XP possível, então a jornada tem o mesmo ritmo mesmo se novas missões forem criadas.
@@ -248,15 +253,35 @@ Ideias que ficariam ótimas:
 - [ ] Modo desafio cronometrado
 - [ ] Placar da turma (exportar/importar o progresso em um arquivo)
 - [ ] Tradução para inglês e espanhol
-- [ ] Novos cenários além da *Pizzaria do Zé*
+- [ ] Novos cenários além da _Pizzaria do Zé_
 
-Abra uma *issue* com a ideia ou envie um *pull request*. Antes, rode `npm test`.
+Abra uma _issue_ com a ideia ou envie um _pull request_. Antes, rode `npm test`.
+
+<h2 align="center">Heróis do Git Quest 🛡️</h2>
+
+<table align="center" style="background-color: #121212; border-radius: 10px; border: none;">
+  <tr>
+    <!-- Card do Criador (Bruno) -->
+    <td align="center" width="220" style="padding: 15px; border: 1px solid #FFD700; border-radius: 8px;">
+      <a href="https://github.com/bruno-a-dias">
+        <img src="https://github.com/bruno-a-dias.png" width="120px;" style="border-radius: 50%; border: 3px solid #FFD700;" alt="Foto de Bruno Assunção Dias"/><br />
+        <br />
+        <sub><b style="font-size: 16px; color: #FFFFFF;">Bruno Assunção Dias</b></sub>
+      </a><br />
+      <span style="color: #FFD700; font-weight: bold;">👑 Criador / Mantenedor</span><br />
+      <sub style="color: #A0A0A0;">DevQuest / Git Quest</sub>
+    </td>
+
+    <!-- NOVO_CONTRIBUIDOR_AQUI -->
+
+  </tr>
+</table>
 
 ---
 
 ## 👨‍🏫 Autor
 
-**Prof. Me. Bruno Assunção Dias**: professor de Tecnologia da Informação no **IESB**, em Brasília-DF.
+**Prof. Me. Bruno Assunção Dias**: professor de Tecnologia da Informação, em Brasília-DF.
 GitHub: [@bruno-a-dias](https://github.com/bruno-a-dias)
 
 Feito com ☕ e muito `git commit` para que os alunos **percam o medo do terminal**.
@@ -265,8 +290,4 @@ Feito com ☕ e muito `git commit` para que os alunos **percam o medo do termina
 
 Distribuído sob a licença **MIT**. Veja [`LICENSE`](LICENSE). Use, adapte e leve para a sua sala de aula.
 
-<div align="center">
-
 ⭐ Se o Git Quest ajudou a sua turma, deixe uma estrela no repositório!
-
-</div>
