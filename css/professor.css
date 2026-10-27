@@ -19,13 +19,58 @@
 .tablewrap{overflow-x:auto}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
-td.who{white-space:normal;overflow-wrap:anywhere;min-width:140px}td.where{white-space:normal;min-width:180px}
+td.nm{white-space:normal;overflow-wrap:anywhere;min-width:140px}td.where{white-space:normal;min-width:180px}
 th{color:var(--mute);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;user-select:none}
 th[aria-sort]{color:var(--amber)}
 th .vh,.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .num{text-align:right;font-variant-numeric:tabular-nums}
-tr.done td.who::after{content:" 🎓"}
+tr.done td.nm::after{content:" 🎓"}
 .pct{display:inline-block;width:70px;height:8px;border-radius:4px;background:var(--panel2);vertical-align:middle;margin-right:8px;overflow:hidden}
 .pct i{display:block;height:100%;background:var(--teal)}
 .x{background:none;border:0;color:var(--dim);font-size:18px;line-height:1;padding:2px 6px}.x:hover{color:var(--rose)}
 @media (max-width:640px){.prohead h1{font-size:26px}.chart{height:150px}}
+
+/* ---------- turmas, filtros, detalhes, impressão ---------- */
+.clsbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 16px}
+.clsbar label{color:var(--mute);font-size:13px}
+.sel,.inp{background:var(--term);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:7px 10px;font:inherit;font-size:14px;min-width:0}
+.sel{max-width:100%}
+.clsform{display:flex;gap:8px;flex-wrap:wrap;align-items:center;flex-basis:100%}.clsform[hidden]{display:none}
+.dropzone.over{outline:2px dashed var(--teal);outline-offset:-6px}
+.filters{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.filters .inp{flex:0 1 320px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip2{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 12px;font-size:13px}
+.chip2 b{color:var(--amber);margin-left:4px}
+.chip2[aria-pressed="true"]{border-color:var(--teal);color:var(--teal)}
+.card.attn b{color:var(--rose)}
+.axis{display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:3px;margin-top:6px}
+.axis span{font-size:11px;text-align:center;border-top:2px solid;padding-top:3px;overflow:hidden}
+.bar.sel{outline:2px solid var(--amber);outline-offset:1px;opacity:1}
+.who{margin-top:10px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 14px;font-size:14px}
+.who p{margin:6px 0 0}.mute{color:var(--mute)}.small{font-size:12.5px}
+tbody tr{cursor:pointer}tbody tr:hover,tbody tr:focus-visible{background:rgba(120,140,200,.08);outline:none}
+tr.risk td.stt{color:var(--rose)}tr.idle td.stt{color:var(--orange)}tr.done td.stt{color:var(--green)}
+td.stt{white-space:normal;min-width:110px}
+.tools{margin-top:14px}
+.stucard{text-align:center}.stucard h2{font-size:30px;overflow-wrap:anywhere}
+.strip{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:4px;margin:12px 0 6px}
+.strip .cell{aspect-ratio:1;border:2px solid var(--c);border-radius:5px;font-size:11px;display:grid;place-items:center;color:var(--c)}
+.strip .cell.ok{background:var(--c);color:#0a0f1e;font-weight:700}
+.strip .cell.now{box-shadow:0 0 0 2px var(--bg2),0 0 0 4px var(--amber)}
+.stugrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0;text-align:left}
+.stugrid div{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+.stugrid span{display:block;font-size:12px}.stugrid b{overflow-wrap:anywhere;font-size:14px}
+#printtitle{display:none}
+@media print{
+  body{background:#fff!important;color:#000!important;padding:0}
+  .panel,.card,.who,.stugrid div{background:#fff!important;border-color:#bbb!important;color:#000!important}
+  .prohead a,.clsbar,.dropzone,.filters,.tools,.x,#stu,.sub.small,.chips{display:none!important}
+  #printtitle{display:block;font-size:20px;font-weight:700;margin:0 0 8px}
+  .card b,th[aria-sort]{color:#000!important}.sub,.mute,th{color:#444!important}
+  .pro{max-width:none}tr{break-inside:avoid}
+}
+@media (max-width:640px){.strip{grid-template-columns:repeat(8,minmax(0,1fr))}}
+.pro{grid-template-columns:minmax(0,1fr)}.pro>*{min-width:0}
+@media (max-width:640px){.bar i{display:none}.filters .inp{flex:1 1 100%}}
+th{position:relative}.vh{white-space:nowrap}

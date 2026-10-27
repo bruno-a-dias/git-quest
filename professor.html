@@ -15,6 +15,7 @@
 </head>
 <body>
 <div class="wrap pro">
+  <p id="printtitle"></p>
   <header class="prohead">
     <div>
       <h1>Painel da turma</h1>
@@ -23,9 +24,22 @@
     <a class="btn" href="index.html">← Voltar ao jogo</a>
   </header>
 
-  <section class="panel" aria-labelledby="addh">
+  <section class="panel clsbar" aria-label="Turmas">
+    <label for="cls">Turma</label>
+    <select id="cls" class="sel"></select>
+    <button class="btn sm" id="clsNew">Nova turma</button>
+    <button class="btn sm" id="clsRename">Renomear</button>
+    <button class="btn sm" id="clsDel">Excluir turma</button>
+    <form id="clsform" class="clsform" hidden>
+      <input id="clsName" class="inp" maxlength="40" aria-label="Nome da turma" placeholder="Ex.: ADS 2026/2 · Noturno">
+      <button class="btn pri sm" type="submit">Salvar</button>
+      <button class="btn sm" type="button" id="clsCancel">Cancelar</button>
+    </form>
+  </section>
+
+  <section class="panel dropzone" id="drop" aria-labelledby="addh">
     <h3 id="addh">1. Adicionar alunos</h3>
-    <p class="sub">Cada aluno abre o jogo, clica em <b>Progresso</b> e envia o código (WhatsApp, e-mail, Teams, arquivo). Pode colar tudo de uma vez, até com o texto das mensagens: o painel acha os códigos sozinho. Se o mesmo aluno enviar de novo, o painel atualiza a linha dele.</p>
+    <p class="sub">Cada aluno abre o jogo, clica em <b>Progresso</b> e envia o código (WhatsApp, e-mail, Teams, arquivo). Pode colar tudo de uma vez, até com o texto das mensagens: o painel acha os códigos sozinho. Se o mesmo aluno enviar de novo, o painel atualiza a linha dele. Também dá para <b>arrastar arquivos .txt</b> para cima desta caixa.</p>
     <textarea id="paste" class="progbox mono" rows="5" spellcheck="false" placeholder="GQ1.eyJ2IjoxLC4uLg.k3x9a ..."></textarea>
     <div class="row">
       <button class="btn pri" id="add">Adicionar à turma</button>
@@ -42,26 +56,57 @@
 
   <section class="panel" aria-labelledby="chh">
     <h3 id="chh">2. Onde a turma trava</h3>
-    <p class="sub">Quantos alunos concluíram cada missão. A cor é a do mundo. A missão com a maior queda em relação à anterior fica marcada.</p>
-    <div class="chart" id="chart" role="img" aria-label="Alunos que concluíram cada missão"></div>
+    <p class="sub">Quantos alunos concluíram cada missão. A cor é a do mundo. A missão com a maior queda em relação à anterior fica marcada. <b>Clique numa barra</b> para ver quem ainda não fez.</p>
+    <div class="chart" id="chart" aria-label="Alunos que concluíram cada missão"></div>
+    <div class="axis" id="axis" aria-hidden="true"></div>
     <p id="chartnote" class="sub"></p>
+    <div id="who" class="who" hidden></div>
   </section>
 
   <section class="panel" aria-labelledby="th">
     <h3 id="th">3. Alunos</h3>
+    <div class="filters">
+      <input id="q" class="inp" type="search" placeholder="Buscar aluno…" aria-label="Buscar aluno">
+      <div class="chips" id="chips" role="group" aria-label="Filtrar por situação">
+        <button class="chip2" data-f="all" aria-pressed="true">Todos <b></b></button>
+        <button class="chip2" data-f="done" aria-pressed="false">Concluíram <b></b></button>
+        <button class="chip2" data-f="risk" aria-pressed="false">Em risco <b></b></button>
+        <button class="chip2" data-f="idle" aria-pressed="false">Parados <b></b></button>
+      </div>
+    </div>
     <div class="tablewrap">
       <table id="tbl">
         <thead><tr>
           <th data-k="n" scope="col">Aluno</th><th data-k="x" scope="col" class="num">XP</th><th data-k="pct" scope="col" class="num">%</th>
           <th data-k="cnt" scope="col" class="num">Missões</th><th data-k="rk" scope="col">Título</th><th data-k="next" scope="col">Está em</th>
-          <th data-k="code" scope="col">Cód. diploma</th><th data-k="t" scope="col">Enviado</th><th scope="col"><span class="vh">Remover</span></th>
+          <th data-k="code" scope="col">Cód. diploma</th><th data-k="t" scope="col">Enviado</th><th data-k="st" scope="col">Situação</th><th scope="col"><span class="vh">Remover</span></th>
         </tr></thead>
         <tbody id="rows"></tbody>
       </table>
     </div>
     <p id="empty" class="sub">Nenhum aluno ainda. Cole os códigos acima.</p>
+    <p class="sub small"><b>Em risco:</b> não concluiu e está mais de 25 pontos percentuais abaixo da média da turma (com 3 ou mais alunos). <b>Parado:</b> não concluiu e o último código tem mais de 7 dias. Clique numa linha para ver o detalhe do aluno.</p>
+    <div class="row tools">
+      <button class="btn" id="wpp">Copiar resumo (WhatsApp)</button>
+      <button class="btn" id="print">Imprimir / PDF</button>
+      <span class="grow"></span>
+      <button class="btn" id="backup">Baixar backup da turma (.json)</button>
+      <label class="btn filebtn">Restaurar backup <input type="file" id="restore" accept=".json,application/json" hidden></label>
+    </div>
     <p class="sub small">Aviso honesto: o código é conferido (formato, checksum e soma de XP), o que pega cópia incompleta e edição acidental, mas como o jogo roda no navegador do aluno, alguém muito determinado conseguiria forjar um. Para avaliação com nota, confira também o código do diploma e peça o diploma em imagem.</p>
   </section>
+</div>
+
+<div class="diploma" id="stu" hidden role="dialog" aria-modal="true" aria-labelledby="stuh">
+  <div class="cert stucard">
+    <h2 id="stuh"></h2>
+    <p id="stusub" class="sub"></p>
+    <div class="strip" id="strip" role="list"></div>
+    <p class="small mute" id="strip-note"></p>
+    <div class="stugrid" id="stugrid"></div>
+    <div id="stubadges" class="certb"></div>
+    <div class="winacts" style="justify-content:center"><button class="btn" id="stucopy">Copiar código do diploma</button><button class="btn" id="sturm">Remover da turma</button><button class="btn pri" id="stuclose">Fechar</button></div>
+  </div>
 </div>
 
 <script src="js/missions.js"></script>

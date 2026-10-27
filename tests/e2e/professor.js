@@ -19,12 +19,12 @@ function aluno(nome,pid,ate,t){const done={},badges={};for(let i=0;i<ate;i++)don
 (async()=>{
   await new Promise(r=>server.listen(0,r));
   const base='http://127.0.0.1:'+server.address().port;
-  const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1280,height:1000},acceptDownloads:true});
+  const b=await chromium.launch();const ctx=await b.newContext({viewport:{width:1280,height:1000},acceptDownloads:true,permissions:['clipboard-read','clipboard-write']});
   await ctx.route(/fonts\.(googleapis|gstatic)\.com/,r=>r.abort());
   const page=await ctx.newPage();const errs=[];page.on('pageerror',e=>errs.push(e.message));
   await page.goto(base+'/professor.html');
   const N=MISSIONS.length;
-  const lista=[aluno('Ana <img src=x onerror=alert(1)>','a1',N),aluno('Bruno Lima','b2',12),aluno('Carla Souza','c3',12),aluno('Davi','d4',5),aluno('Eva','e5',20)];
+  const lista=[aluno('Ana <img src=x onerror=alert(1)>','a1',N),aluno('Bruno Lima','b2',12),aluno('Carla Souza','c3',12),aluno('Davi','d4',5),aluno('Eva','e5',20,Date.now()-10*864e5)];
   const velho=aluno('Bruno Lima','b2',3,1000);       /* mais antigo: deve ser ignorado */
   const novo=aluno('Davi Alves','d4',9,Date.now()+5000); /* mais novo: atualiza a linha */
   const texto='oi prof, segue:\n'+lista.slice(0,3).join('\n')+'\n\n'+lista[3]+' e '+lista[4]+'\nlixo GQ1.abc.def\n'+velho+'\n'+novo;
@@ -54,9 +54,63 @@ function aluno(nome,pid,ate,t){const done={},badges={};for(let i=0;i<ate;i++)don
   const nomes=await page.$$eval('#rows tr td:first-child',t=>t.map(x=>x.textContent));
   const ord=[...nomes].sort((a,b)=>a.localeCompare(b,'pt-BR'));
   if(JSON.stringify(nomes)!==JSON.stringify(ord))bad('ordenação por nome: '+nomes);
+  /* situação: Eva parada (10 dias), Davi em risco (29% < média-25), Ana concluiu */
+  const st=Object.fromEntries((await page.$$eval('#rows tr',trs=>trs.map(tr=>[tr.children[0].textContent,tr.children[8].textContent]))));
+  if(!/Concluiu/.test(st['Ana <img src=x onerror=alert(1)>']))bad('situação da Ana: '+st['Ana <img src=x onerror=alert(1)>']);
+  if(!/Parado/.test(st['Eva']))bad('Eva deveria estar parada: '+st['Eva']);
+  if(!/Em risco/.test(st['Davi Alves']))bad('Davi deveria estar em risco: '+st['Davi Alves']);
+  if(/Parado|risco/.test(st['Bruno Lima']))bad('Bruno não deveria ter alerta: '+st['Bruno Lima']);
+  /* filtros e busca */
+  await page.click('.chip2[data-f="idle"]');
+  if((await page.$$('#rows tr')).length!==1)bad('filtro Parados');
+  await page.click('.chip2[data-f="all"]');
+  await page.fill('#q','lima');
+  if((await page.$$('#rows tr')).length!==1)bad('busca por nome');
+  await page.fill('#q','');
+  /* clique na barra mostra quem falta */
+  await page.click('#chart .bar:nth-child(15)');
+  const who=await page.textContent('#who');
+  if(!/Ainda não fizeram:.*Davi Alves/.test(who)||/Ainda não fizeram:.*Eva/.test(who))bad('painel "quem falta": '+who);
+  if((await page.$$('#axis span')).length!==7)bad('eixo com 7 linhas');
+  /* detalhe do aluno */
+  await page.click('#rows tr:has-text("Eva")');
+  await page.waitForSelector('#stu:not([hidden])');
+  if((await page.$$('#strip .cell.ok')).length!==20)bad('faixa de missões da Eva');
+  if(!/missão 21/.test(await page.textContent('#strip-note')))bad('nota da faixa: '+await page.textContent('#strip-note'));
+  await page.keyboard.press('Escape');
+  if(!(await page.$('#stu[hidden]')))bad('Esc deveria fechar o detalhe');
+  /* resumo para WhatsApp */
+  await page.click('#wpp');await page.waitForSelector('#msg.ok');
+  const clip=await page.evaluate(()=>navigator.clipboard.readText());
+  if(!/\*Git Quest · Minha turma\*/.test(clip)||!/🥇 Ana/.test(clip)||!/Vamos ajudar/.test(clip))bad('resumo WhatsApp: '+clip);
+  /* várias turmas */
+  await page.click('#clsNew');await page.fill('#clsName','Noturno 2026/2');await page.press('#clsName','Enter');
+  if((await page.$$('#rows tr')).length!==0)bad('turma nova deveria começar vazia');
+  await page.fill('#paste',aluno('Zeca','z9',4));await page.click('#add');
+  if((await page.$$('#rows tr')).length!==1)bad('aluno na turma nova');
+  await page.selectOption('#cls',{label:'Minha turma (5)'});
+  if((await page.$$('#rows tr')).length!==5)bad('voltar para a primeira turma');
+  /* backup: exporta, esvazia e restaura, rejeitando aluno adulterado */
+  const [bk]=await Promise.all([page.waitForEvent('download'),page.click('#backup')]);
+  const bf='/tmp/gq-backup.json';await bk.saveAs(bf);
+  const bj=JSON.parse(fs.readFileSync(bf,'utf8'));
+  if(bj.gitquest!=='turmas'||Object.keys(bj.classes).length!==2)bad('conteúdo do backup');
+  const first=Object.values(bj.classes)[0];const k0=Object.keys(first.students)[0];first.students[k0].x+=777; /* XP incoerente */
+  fs.writeFileSync('/tmp/gq-backup-forjado.json',JSON.stringify(bj));
+  await page.setInputFiles('#restore','/tmp/gq-backup-forjado.json');await page.waitForSelector('#msg.ok');
+  const m2=await page.textContent('#msg');
+  if(!/2 turma\(s\), 5 aluno\(s\)/.test(m2))bad('restauração deveria descartar o aluno forjado: '+m2);
+  await page.setInputFiles('#restore',{name:'x.json',mimeType:'application/json',buffer:Buffer.from('{"oi":1}')});
+  await page.waitForSelector('#msg.err');
+  /* excluir turma extra */
+  while((await page.$$('#cls option')).length>1){
+    const lab=await page.$$eval('#cls option',o=>o.map(x=>x.textContent).filter(t=>!t.startsWith('Minha turma (5)')));
+    await page.selectOption('#cls',{label:lab[0]});await page.click('#clsDel');await page.click('#clsDel');
+  }
+  if(!/Minha turma/.test(await page.textContent('#cls option:checked')))bad('turma restante');
   /* persistência */
   await page.reload();await page.waitForSelector('#rows tr');
-  if((await page.$$('#rows tr')).length!==5)bad('turma não persistiu');
+  if((await page.$$('#rows tr')).length<1)bad('turma não persistiu');
   /* CSV */
   const [dl]=await Promise.all([page.waitForEvent('download'),page.click('#csv')]);
   const f='/tmp/gq-turma.csv';await dl.saveAs(f);const csv=fs.readFileSync(f,'utf8');
@@ -66,7 +120,7 @@ function aluno(nome,pid,ate,t){const done={},badges={};for(let i=0;i<ate;i++)don
   if((await page.$$('#rows tr')).length!==4)bad('remover');
   await page.click('#clear');await page.click('#clear');
   if((await page.$$('#rows tr')).length!==0)bad('limpar turma');
-  if(process.env.SHOT){await page.fill('#paste',texto);await page.click('#add');await page.screenshot({path:process.env.SHOT,fullPage:true});}
+  if(process.env.SHOT){await page.fill('#paste',texto);await page.click('#add');await page.click('#chart .bar:nth-child(15)');await page.screenshot({path:process.env.SHOT,fullPage:true});await page.click('#rows tr:has-text("Eva")');await page.screenshot({path:process.env.SHOT.replace('.png','-det.png')});await page.keyboard.press('Escape');await page.setViewportSize({width:400,height:900});await page.screenshot({path:process.env.SHOT.replace('.png','-mob.png'),fullPage:true});}
   if(errs.length)bad('erros de página: '+errs.join(' | '));
   await b.close();server.close();
   console.log(fails?`\n${fails} problemas`:'ok  painel da turma');
