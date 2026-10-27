@@ -49,7 +49,7 @@
 | 🟣 **Vercel** (principal) | [gitquestgame.vercel.app](https://gitquestgame.vercel.app/) |
 | ⚫ **GitHub Pages** (espelho) | [bruno-a-dias.github.io/git-quest](https://bruno-a-dias.github.io/git-quest/) |
 
-Os dois endereços servem exatamente os mesmos arquivos. Se um estiver fora do ar, use o outro.
+Os dois endereços servem exatamente os mesmos arquivos. Se um estiver fora do ar, use o outro. Depois da primeira visita o jogo **funciona offline** e pode ser **instalado como app** (menu do navegador → *Instalar*).
 
 ---
 
@@ -217,26 +217,40 @@ Roda oito suítes (motor, missões, idiomas, código de progresso, troféus, mis
 ```
 git-quest/
 ├── index.html              # estrutura da página e ordem dos scripts
-├── professor.html          # painel da turma (ranking, gargalos, CSV)
+├── professor.html          # painel da turma (ranking, gargalos, troféus, CSV)
+├── manifest.webmanifest    # PWA: nome, ícones e cores do app instalável
+├── sw.js                   # service worker: o jogo funciona offline
 ├── css/
-│   └── style.css           # visual "mapa de metrô em papel quadriculado escuro"
+│   ├── style.css           # visual "mapa de metrô em papel quadriculado escuro"
+│   └── professor.css       # visual do painel da turma
+├── assets/                 # capa 1200x630, ícones do PWA e selos dos heróis
+├── tools/                  # make-assets.js (capa e ícones) e setup-repo.sh (tópicos e issues)
 ├── js/
 │   ├── git-engine.js       # motor de Git + mini shell (puro JS, sem dependências)
 │   ├── missions.js         # mundos, missões, quizzes, ranks e conquistas (os DADOS, em português)
 │   ├── i18n.js             # motor de idiomas + bandeiras SVG
 │   ├── lang/               # um arquivo por idioma: en, es, fr, de, it, ru, hi
 │   ├── progress.js         # código de progresso do aluno e código de verificação do diploma
+│   ├── trophies.js         # regras dos 14 troféus (bronze, prata, ouro e platina)
+│   ├── real.js             # confere repositório, fork e PR na API pública do GitHub
+│   ├── pdf.js              # gerador mínimo de PDF (diploma frente e verso)
+│   ├── pwa.js              # registra o service worker
 │   ├── core.js             # preparo da missão e avaliação dos objetivos
 │   ├── ui-panels.js        # HUD, mapa de linhas, áreas do Git, grafo, sons, confete
 │   ├── ui-game.js          # terminal, fluxo de missão, dicas, diploma, inicialização
-│   ├── ui-share.js         # exportar/importar progresso e diploma em imagem (PNG)
+│   ├── ui-extras.js        # troféus, desafio cronometrado, revisão espaçada, missões reais
+│   ├── ui-share.js         # exportar/importar progresso, diploma (frente e verso) em PNG e PDF
 │   └── professor.js        # lógica do painel da turma
 ├── tests/
 │   ├── test-engine.js      # testes do simulador de Git
 │   ├── test-missions.js    # toda missão precisa ser completável pela solução
 │   ├── test-i18n.js        # todo idioma precisa estar completo e coerente
 │   ├── test-progress.js    # código de progresso: formato, adulteração e diploma
-│   └── e2e/                # Playwright: joga as 40 missões no navegador + painel da turma
+│   ├── test-trophies.js    # regras dos troféus e da platina
+│   ├── test-real.js        # verificação do GitHub (com API simulada)
+│   ├── test-pdf.js         # estrutura do PDF do diploma
+│   ├── test-pwa.js         # pré-cache completo, ícones e capa 1200x630
+│   └── e2e/                # Playwright: joga as 40 missões + extras (desafio, revisão, offline) + painel
 ├── i18n/                   # este README em outros idiomas
 ├── docs/                   # capturas de tela usadas neste README
 ├── package.json
@@ -252,10 +266,15 @@ Os scripts são clássicos (sem módulos) e **carregados nesta ordem**, porque c
 <script src="js/i18n.js"></script>        <!-- I18N (idiomas e bandeiras)      -->
 <script src="js/lang/en.js"></script>     <!-- ...um arquivo por idioma        -->
 <script src="js/progress.js"></script>    <!-- GQP (progresso e diploma)       -->
+<script src="js/trophies.js"></script>    <!-- GQT (troféus)                    -->
+<script src="js/pdf.js"></script>         <!-- GQPDF                            -->
+<script src="js/real.js"></script>        <!-- GQR (missões do GitHub real)     -->
 <script src="js/core.js"></script>        <!-- startMission, stepMission, ...   -->
 <script src="js/ui-panels.js"></script>   <!-- window.GQ                        -->
 <script src="js/ui-game.js"></script>     <!-- liga tudo e inicia o jogo        -->
-<script src="js/ui-share.js"></script>    <!-- progresso e diploma em PNG       -->
+<script src="js/ui-extras.js"></script>   <!-- troféus, desafio, revisão        -->
+<script src="js/ui-share.js"></script>    <!-- progresso e diploma (PNG/PDF)    -->
+<script src="js/pwa.js"></script>         <!-- service worker                   -->
 ```
 
 ### 🔬 O motor de Git
@@ -292,6 +311,18 @@ Os objetivos olham o **estado do repositório** (`ok(g, ctx)`), então vale qual
 | Cada dica usada | −25 (mínimo 20) |
 | Bônus: sem erros **e** sem dicas | **+25** |
 | Quiz na 1ª tentativa / 2ª / 3ª ou mais | **50 / 25 / 10** |
+| Bônus do **desafio contra o relógio** (1ª vez que conclui) | **+50** |
+
+### 🏆 Troféus
+
+| Nível | Qtd. | Exemplos |
+|---|:--:|---|
+| 🥉 Bronze | 5 | Primeiro passo · Linha um · Mente ágil · Sem tropeços · São e salvo (exportar o progresso) |
+| 🥈 Prata | 4 | Na metade do caminho · Dono das branches · Domador de conflitos · Contra o relógio (3 desafios) |
+| 🥇 Ouro | 4 | Cabeça nas nuvens · Nível avançado · De verdade (GitHub real) · Perfeccionista (10 missões sem erro nem dica) |
+| 💎 Platina | 1 | Lenda do Git: todos os outros troféus e todas as missões |
+
+Os nomes ficam em `js/lang/*.js` (chave `trophies`) e as regras em `js/trophies.js`.
 
 Os ranks sobem em frações do total de XP possível, então a jornada tem o mesmo ritmo mesmo se novas missões forem criadas.
 
