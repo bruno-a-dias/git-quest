@@ -105,6 +105,43 @@ t(g,'git config --global alias.st status');t(g,'git st',/On branch main/);
 t(g,'git add .gitignore');t(g,'git commit -m "ignore"');
 t(g,'git switch -c hot');t(g,'echo "fix" > fix.txt');t(g,'git add .');t(g,'git commit -m "hotfix"');
 t(g,'git switch main');const hot=g.repo().branches.hot;t(g,'git cherry-pick '+hot.slice(0,7),/hotfix/);t(g,'ls','fix.txt');
+// rebase / bisect / worktree
+{
+  const h=createGit();
+  ['mkdir adv','cd adv','git init','git config user.name A','git config user.email a@a.com',
+   'echo 1 > a.txt','git add .','git commit -m "c1"'].forEach(c=>h.run(c));
+  t(h,'git switch -c feat',undefined,false);
+  t(h,'echo f > f.txt');t(h,'git add .');t(h,'git commit -m "feat1"');
+  t(h,'git switch main');t(h,'echo m > m.txt');t(h,'git add .');t(h,'git commit -m "main2"');
+  t(h,'git switch feat');
+  t(h,'git rebase main',/Successfully rebased/,false);
+  t(h,'git log --oneline',/feat1[\s\S]*main2[\s\S]*c1/);
+  t(h,'ls',/f.txt/);t(h,'ls',/m.txt/);
+  t(h,'git rebase main',/up to date/);
+  t(h,'git rebase',/No upstream/,true);
+  t(h,'git switch main');t(h,'git rebase feat',/Successfully rebased/);
+  // bisect
+  for(let i=3;i<=8;i++){h.run('echo '+i+' > n'+i+'.txt');h.run('git add .');h.run('git commit -m "c'+i+(i===6?' bug':'')+'"');}
+  t(h,'git bisect good',/start/,true);
+  t(h,'git bisect start',undefined,false);
+  t(h,'git bisect bad',/waiting for good/);
+  const first=h.repo().commits[Object.keys(h.repo().commits).find(s=>h.repo().commits[s].msg==='c1')].sha;
+  let o=t(h,'git bisect good '+first.slice(0,7),/Bisecting/);
+  let guard=0;
+  while(!/is the first bad commit/.test(o)&&guard++<10){
+    const cur=h.repo().commits[h.repo().detached].msg;
+    const num=+cur.match(/c(\d+)/)?.[1];
+    o=t(h,'git bisect '+(num>=6&&/^c[6-8]/.test(cur)?'bad':'good'),undefined,false);
+  }
+  if(!/c6 bug/.test(o)){fails++;console.log('FALHOU bisect: '+o);}
+  t(h,'git bisect reset',/restored/);
+  if(h.repo().detached){fails++;console.log('FALHOU bisect reset detached');}
+  // worktree
+  t(h,'git worktree add ../hotfix -b hotfix',/new branch 'hotfix'/,false);
+  t(h,'git worktree list',/hotfix/);
+  t(h,'git worktree remove ../hotfix',undefined,false);
+  t(h,'git worktree list',/^(?:(?!hotfix)[\s\S])*$/);
+}
 // view
 const v=g.view();if(!v.inRepo||!v.graph.nodes.length||!v.graph.lanes.length){fails++;console.log('FALHOU view');}
 console.log(fails?('\n'+fails+' falhas'):'TODOS OS TESTES DO MOTOR PASSARAM');

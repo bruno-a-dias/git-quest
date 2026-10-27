@@ -27,6 +27,11 @@
   function encode(S){
     const d={};Object.keys(S.done||{}).forEach(k=>{d[k]=(S.done[k]&&S.done[k].xp)|0;});
     const data={v:1,p:S.pid||'',n:(S.player||(S.id&&S.id.name)||'').slice(0,60),x:S.xp|0,d,b:Object.keys(S.badges||{}).filter(k=>S.badges[k]),l:S.lang||'',c:S.cur|0,t:Date.now()};
+    /* campos opcionais (troféus e estatísticas); códigos antigos continuam válidos sem eles */
+    const tr=Object.keys(S.tro||{}).filter(k=>S.tro[k]);if(tr.length)data.tr=tr;
+    const st={q:S.qf|0,c:S.chw|0,p:S.perfect|0,b:S.bestCombo|0,e:S.exp?1:0};
+    if(st.q||st.c||st.p||st.b||st.e)data.st=st;
+    if(S.t0)data.t0=S.t0|0;
     const p=b64e(JSON.stringify(data));
     return PREFIX+'.'+p+'.'+chk(p);
   }
@@ -45,6 +50,11 @@
         sum+=o.d[k];
       }
       if(sum!==o.x)return {ok:false,error:'xp'};
+      if(o.tr!==undefined&&(!Array.isArray(o.tr)||o.tr.length>60||o.tr.some(x=>typeof x!=='string'||x.length>20)))return {ok:false,error:'format'};
+      if(o.st!==undefined){
+        if(typeof o.st!=='object'||o.st===null)return {ok:false,error:'format'};
+        for(const k of ['q','c','p','b','e'])if(o.st[k]!==undefined&&(!Number.isInteger(o.st[k])||o.st[k]<0||o.st[k]>9999))return {ok:false,error:'format'};
+      }
       return {ok:true,data:o};
     }catch(e){return {ok:false,error:'format'};}
   }

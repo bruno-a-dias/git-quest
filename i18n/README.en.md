@@ -18,9 +18,9 @@
 ### Learn Git by **playing**. Type real commands, win stations, and reach the cloud.
 
 <p>
-  <img alt="Missions" src="https://img.shields.io/badge/missions-32-2dd4bf?style=for-the-badge">
-  <img alt="Lines" src="https://img.shields.io/badge/metro%20lines-7-a78bfa?style=for-the-badge">
-  <img alt="Git commands" src="https://img.shields.io/badge/git%20commands-30-fbbf24?style=for-the-badge">
+  <img alt="Missions" src="https://img.shields.io/badge/missions-40-2dd4bf?style=for-the-badge">
+  <img alt="Lines" src="https://img.shields.io/badge/metro%20lines-9-a78bfa?style=for-the-badge">
+  <img alt="Git commands" src="https://img.shields.io/badge/git%20commands-33-fbbf24?style=for-the-badge">
   <img alt="Languages" src="https://img.shields.io/badge/languages-8-f97316?style=for-the-badge">
   <img alt="Zero dependencies" src="https://img.shields.io/badge/dependencies-0-4ade80?style=for-the-badge">
   <img alt="MIT" src="https://img.shields.io/badge/license-MIT-38bdf8?style=for-the-badge">
@@ -59,7 +59,7 @@ Both addresses serve exactly the same files. If one is down, use the other.
 
 ---
 
-## 🗺️ The game map: 7 metro lines
+## 🗺️ The game map: 9 metro lines
 
 Every **world is a line** and every **mission is a station** (diamond ones are quizzes). Students unlock the next station only after finishing the current one.
 
@@ -84,7 +84,9 @@ flowchart LR
 | 🔵 **6** | Drawer and labels | `git stash`, `git tag` | 3 |
 | 🟩 **7** | Off to the cloud | `git remote`, `push -u`, `pull`, `clone`, **final boss** | 6 |
 
-**32 missions in total**: 26 command missions and 6 quick quizzes.
+**40 missions in total**: 33 command missions (3 on the real GitHub) and 7 quick quizzes.
+
+Lines 8 and 9 add **advanced Git** (`rebase`, `bisect`, `worktree`) and **real GitHub missions** (create a repository, fork, Pull Request, checked through GitHub's public API). Along the way students earn **14 PlayStation-style trophies** (bronze, silver, gold, platinum), shown on the back of the diploma next to the tracks. The game also works **offline** (PWA).
 
 ---
 
@@ -139,7 +141,7 @@ The game flags are **hand-drawn SVGs** (flag emoji do not render on Windows). Th
 
 ## 🧰 Commands supported by the simulator
 
-**Git (30):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
+**Git (33):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `rebase` · `bisect` · `worktree` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
 
 **Shell:** `ls` · `cat` · `touch` · `echo` (`>` / `>>`) · `mkdir` · `cd` · `pwd` · `rm` · `clear`
 

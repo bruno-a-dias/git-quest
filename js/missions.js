@@ -6,7 +6,9 @@ const WORLDS=[
   {n:4,t:'Linhas paralelas',c:'#a78bfa',doc:'Parte 8'},
   {n:5,t:'Zona de conflito',c:'#f97316',doc:'Parte 9'},
   {n:6,t:'Gaveta e etiquetas',c:'#38bdf8',doc:'Parte 11'},
-  {n:7,t:'Rumo à nuvem',c:'#4ade80',doc:'Partes 13 e 14'}
+  {n:7,t:'Rumo à nuvem',c:'#4ade80',doc:'Partes 13 e 14'},
+  {n:8,t:'Nível avançado',c:'#f43f5e',doc:'Extras'},
+  {n:9,t:'GitHub de verdade',c:'#e2e8f0',doc:'Parte 14'}
 ];
 const BASE=['mkdir pizzaria','cd pizzaria','git init','echo "<h1>Pizzaria do Ze</h1>" > index.html','git add .','git commit -m "Cria pagina inicial"'];
 const INIT=['mkdir pizzaria','cd pizzaria','git init'];
@@ -16,6 +18,9 @@ const WD=g=>g.state().folders[g.state().cwd].wd;
 const nCommits=g=>{const r=Rp(g);return r?g.view().commits:0;};
 const headMsg=g=>{const r=Rp(g);const s=r&&(r.detached||r.branches[r.head]);return s?r.commits[s].msg.split('\n')[0]:'';};
 const headC=g=>{const r=Rp(g);const s=r&&(r.detached||r.branches[r.head]);return s?r.commits[s]:null;};
+const reach=(r,from,x)=>{const seen=new Set(),st=[from];while(st.length){const c=st.pop();if(!c||seen.has(c)||!r.commits[c])continue;seen.add(c);r.commits[c].parents.forEach(p=>st.push(p));}return seen.has(x);};
+const FEAT=[...BASE,'git switch -c feature/menu','echo "<li>Calabresa</li>" > menu.html','git add .','git commit -m "Adiciona menu"','git switch main','echo "<p>Aberto das 18h as 23h</p>" > horario.html','git add .','git commit -m "Adiciona horario"','git switch feature/menu'];
+const BUGSET=[...BASE].concat([1,2,3,4,5,6,7].flatMap(i=>['echo "'+(i>=5?'BUG':'ok')+' '+i+'" > carrinho.txt','git add .','git commit -m "Passo '+i+'"']));
 const hasText=(g,f,t)=>{const v=WD(g)[f];return v!==undefined&&v.includes(t);};
 
 const MISSIONS=[
@@ -237,8 +242,64 @@ const MISSIONS=[
 {type:'quiz',w:6,title:'Quiz final: fetch ou pull?',
  q:'Qual a diferença entre git fetch e git pull?',
  options:['Não há diferença','fetch só baixa as novidades; pull baixa e já integra na sua branch','pull só baixa; fetch integra','fetch envia commits ao GitHub'],answer:1,
- why:'fetch é seguro: atualiza origin/main sem mexer nos seus arquivos. pull faz fetch e merge, o que pode gerar conflitos na hora.'}
+ why:'fetch é seguro: atualiza origin/main sem mexer nos seus arquivos. pull faz fetch e merge, o que pode gerar conflitos na hora.'},
+/* ---------------- MUNDO 8 (avançado) ---------------- */
+{w:7,title:'Histórico limpo com rebase',doc:'Extras',
+ story:'Enquanto você trabalhava na branch feature/menu, a main ganhou um commit novo. Em vez de criar um commit de merge, refaça seu trabalho por cima da main para manter a história em linha reta.',
+ setup:FEAT,
+ goals:[{t:'Reaplicar a feature sobre a main com git rebase',ok:(g,c)=>{const r=Rp(g);if(r&&r.head==='feature/menu'&&r.branches.main&&reach(r,r.branches['feature/menu'],r.branches.main)&&r.branches['feature/menu']!==r.branches.main)c.flags.rb=1;return !!c.flags.rb;}},{t:'Conferir o grafo linear com git log --oneline --graph',ok:(g,c)=>H(c,/^git log.*--graph/)}],
+ hints:['git rebase refaz os seus commits em cima de outra branch.','git rebase main e depois git log --oneline --graph.'],
+ solution:['git rebase main','git log --oneline --graph'],
+ learn:'rebase copia seus commits para o topo da outra branch, com novos hashes. O resultado é uma história linear, sem commit de merge. Nunca use em commits que outras pessoas já baixaram.'},
+{w:7,title:'Integração em linha reta',doc:'Extras',
+ story:'Agora o fluxo completo de uma equipe organizada: refaça a feature sobre a main, volte para a main e traga o trabalho com um merge que só avança (fast-forward), sem commit de merge.',
+ setup:FEAT,
+ goals:[{t:'Refazer a feature com git rebase main',ok:(g,c)=>H(c,/^git rebase main/)},{t:'Voltar para a main',ok:g=>Rp(g)&&Rp(g).head==='main'},{t:'Integrar sem commit de merge com git merge --ff-only',ok:g=>{const r=Rp(g);return r&&r.branches.main===r.branches['feature/menu']&&r.commits[r.branches.main].parents.length===1&&r.commits[r.branches.main].msg==='Adiciona menu';}}],
+ hints:['Três passos: rebase na feature, switch para a main, merge com --ff-only.','git rebase main, git switch main e git merge --ff-only feature/menu.'],
+ solution:['git rebase main','git switch main','git merge --ff-only feature/menu'],
+ learn:'Rebase + merge --ff-only é o fluxo de muitas equipes: a main fica sem commits de merge e a história se lê de cima a baixo.'},
+{w:7,title:'Caçando o bug com bisect',doc:'Extras',
+ story:'O carrinho de compras quebrou e ninguém sabe quando. O primeiro commit (Cria pagina inicial) estava bom; hoje o arquivo carrinho.txt diz BUG. Use git bisect: em cada passo olhe o arquivo com cat carrinho.txt (se não existir, o commit é bom) e diga ao Git se o commit é good ou bad.',
+ setup:BUGSET,
+ goals:[{t:'Iniciar a caçada com git bisect start',ok:(g,c)=>H(c,/^git bisect start/)},{t:'Descobrir o primeiro commit ruim (Passo 5)',ok:(g,c)=>{const r=Rp(g);if(r&&r.bisect&&r.bisect.found)c.flags.bf=r.bisect.found;return !!c.flags.bf&&r.commits[c.flags.bf].msg==='Passo 5';}},{t:'Voltar ao normal com git bisect reset',ok:(g,c)=>H(c,/^git bisect reset/)&&Rp(g)&&!Rp(g).bisect&&!Rp(g).detached}],
+ hints:['Marque o commit atual como ruim, o primeiro como bom e responda good ou bad a cada passo.','git bisect start, git bisect bad, git bisect good HEAD~7 e depois cat carrinho.txt seguido de git bisect good ou git bisect bad, até aparecer o culpado.'],
+ solution:['git bisect start','git bisect bad','git bisect good HEAD~7','git bisect good','git bisect bad','git bisect bad','git bisect reset'],
+ learn:'bisect faz uma busca binária no histórico: com 100 commits, acha o culpado em cerca de 7 passos. Termine sempre com git bisect reset.'},
+{w:7,title:'Duas pastas, um só repositório',doc:'Extras',
+ story:'Chegou um bug urgente, mas você está no meio de uma tarefa. Em vez de stash ou de clonar de novo, crie uma segunda pasta de trabalho (worktree) numa branch nova.',
+ setup:BASE,
+ goals:[{t:'Criar a worktree com a branch hotfix',ok:(g,c)=>{const r=Rp(g);if(r&&r.worktrees&&Object.values(r.worktrees).some(w=>w.branch==='hotfix'))c.flags.wt=1;return !!c.flags.wt;}},{t:'Listar com git worktree list',ok:(g,c)=>H(c,/^git worktree list/)},{t:'Remover com git worktree remove',ok:(g,c)=>H(c,/^git worktree remove/)&&Rp(g)&&Object.keys(Rp(g).worktrees||{}).length===0}],
+ hints:['git worktree add cria outra pasta ligada ao mesmo repositório; -b cria a branch.','git worktree add ../hotfix -b hotfix, git worktree list e git worktree remove ../hotfix.'],
+ solution:['git worktree add ../hotfix -b hotfix','git worktree list','git worktree remove ../hotfix'],
+ learn:'Uma worktree é outra pasta com outra branch, compartilhando o mesmo histórico. Ótima para hotfix sem mexer no que você está fazendo.'},
+{type:'quiz',w:7,title:'Quiz: quando NÃO usar rebase?',
+ q:'Em qual situação você NÃO deve usar git rebase?',
+ options:['Em commits que só existem no seu computador','Em commits já publicados e usados por outras pessoas','Para atualizar sua feature com a main','Antes de abrir um Pull Request'],answer:1,
+ why:'O rebase cria commits novos com hashes novos. Se outras pessoas já baixaram os antigos, as histórias divergem e o time sofre. Reescreva apenas o que ainda é só seu.'},
+/* ---------------- MUNDO 9 (GitHub de verdade) ---------------- */
+{type:'real',kind:'repo',w:8,title:'Seu primeiro repositório de verdade',doc:'Parte 14',
+ story:'Hora de sair do simulador. Entre em github.com/new, crie um repositório público (pode ser o pizzaria) e informe aqui o seu usuário e o nome do repositório. O jogo confere pela API pública do GitHub.',
+ setup:[],
+ goals:[{t:'Repositório público criado e confirmado no GitHub',ok:(g,c)=>!!c.flags.verified}],
+ hints:['No GitHub, clique em + e depois New repository. Marque como público.','Use o seu nome de usuário e o nome exato do repositório.'],
+ solution:[],
+ learn:'Você criou um repositório público de verdade. Agora git remote add origin com a URL dele e git push -u origin main levam seu código para lá.'},
+{type:'real',kind:'fork',w:8,title:'Faça um fork',doc:'Parte 14',
+ story:'Para contribuir com projetos que não são seus, você faz um fork. Abra github.com/bruno-a-dias/git-quest, clique em Fork e informe aqui o seu usuário e o nome do fork.',
+ setup:[],
+ goals:[{t:'Fork confirmado no GitHub',ok:(g,c)=>!!c.flags.verified}],
+ hints:['O botão Fork fica no canto superior direito da página do repositório.','Informe o seu usuário e o nome do repositório (git-quest, se você não renomeou).'],
+ solution:[],
+ learn:'O fork é a sua cópia no GitHub. Você clona o fork, cria uma branch, envia e abre um Pull Request para o projeto original.'},
+{type:'real',kind:'pr',w:8,title:'Abra um Pull Request',doc:'Parte 14',
+ story:'Chefe final de verdade: no seu fork, edite um arquivo (corrija um texto, traduza uma frase), faça commit numa branch e abra um Pull Request para o projeto original. Cole aqui o endereço do PR.',
+ setup:[],
+ goals:[{t:'Pull Request encontrado no GitHub',ok:(g,c)=>!!c.flags.verified}],
+ hints:['Depois do push, o GitHub mostra o botão Compare & pull request.','Cole o endereço completo, como https://github.com/dono/repositorio/pull/1.'],
+ solution:[],
+ learn:'Parabéns: você contribuiu com software de verdade. É assim que o código aberto funciona no mundo todo.'}
 ];
+
 
 const RANKS=[[0,'Estagiário(a) de commits'],[300,'Aprendiz de branches'],[800,'Dev Júnior'],[1500,'Dev Pleno'],[2300,'Dev Sênior'],[3000,'Mestre(a) do Git']];
 const BADGES=[

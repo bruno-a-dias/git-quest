@@ -10,6 +10,13 @@ MISSIONS.forEach((m,i)=>{
     return;
   }
   const ctx=startMission(g,m,null);
+  if(m.type==='real'){
+    if(goalStates(g,m,ctx).some(Boolean)){fails++;console.log('REAL JÁ NASCE CONCLUÍDA: '+m.title);}
+    ctx.flags.verified=true;
+    if(!goalStates(g,m,ctx).every(Boolean)){fails++;console.log('REAL NÃO CONCLUI: '+m.title);}
+    else console.log('ok  #'+String(i).padStart(2,'0')+' '+m.title+'  (missão real)');
+    return;
+  }
   const before=goalStates(g,m,ctx);
   if(before.every(Boolean)){fails++;console.log('JÁ NASCE CONCLUÍDA: #'+i+' '+m.title);}
   m.solution.forEach(cmd=>{const r=stepMission(g,m,ctx,cmd);if(r.err&&!(m.title==='Nasce um repositório'&&cmd==='git status')){fails++;console.log('ERRO na solução de "'+m.title+'": '+cmd+'\n  '+r.out.map(l=>l[0][1]).join(' | '));}});

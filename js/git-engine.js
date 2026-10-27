@@ -63,7 +63,7 @@ function createGit(){
   /* ---------- repositório ---------- */
   function newRepo(branch){
     return {head:branch,detached:null,branches:{[branch]:null},commits:{},n:0,index:{},stash:[],tags:{},
-      remotes:{},remoteRefs:{},server:{branches:{},tags:{}},upstream:{},merging:null,reflog:[],prev:null};
+      remotes:{},remoteRefs:{},server:{branches:{},tags:{}},upstream:{},merging:null,reflog:[],prev:null,bisect:null,worktrees:{}};
   }
   const headSha=r=>r.detached||r.branches[r.head]||null;
   const treeOf=(r,sha)=>sha?r.commits[sha].tree:{};
@@ -744,6 +744,145 @@ function createGit(){
   };
 
 
+  /* ---------- rebase / bisect / worktree (simplificados) ---------- */
+  function replayPlan(r,commits,startSha){
+    let tip=startSha,cur=treeOf(r,startSha);const steps=[];
+    for(const sha of commits){
+      const c=r.commits[sha],pt=treeOf(r,c.parents[0]),nt={...cur};
+      for(const f of uniq(c.tree,pt)){
+        if(c.tree[f]===pt[f])continue;
+        if(cur[f]===pt[f]){if(c.tree[f]===undefined)delete nt[f];else nt[f]=c.tree[f];}
+        else if(cur[f]!==c.tree[f])return {fail:sha,file:f};
+      }
+      steps.push({from:sha,tree:nt,msg:c.msg,author:c.author});cur=nt;
+    }
+    return {steps};
+  }
+  GIT.rebase=a=>{
+    const r=R();if(!r)return;
+    if(a.includes('--abort')||a.includes('--continue')||a.includes('--skip')){P('fatal: No rebase in progress?','r');return;}
+    const name=a.find(x=>!x.startsWith('-'));
+    if(!name){P('fatal: No upstream configured for the current branch. Specify the branch to rebase onto.','r');return;}
+    const up=resolve(r,name);
+    if(!up){P("fatal: invalid upstream '"+name+"'",'r');return;}
+    const cur=headSha(r);
+    if(!cur){P('fatal: Cannot rebase: you do not have any commits yet.','r');return;}
+    const ch=changes(r);
+    if(ch.staged.length||ch.unstaged.length){P('error: cannot rebase: You have unstaged changes.','r');P('error: Please commit or stash them.','y');return;}
+    if(isAncestor(r,up,cur)){P('Current branch '+brLabel(r)+' is up to date.');return;}
+    if(isAncestor(r,cur,up)){
+      moveHead(r,up,'rebase (finish): returning to '+(r.detached?'HEAD':'refs/heads/'+r.head));
+      applyTree(r,treeOf(r,up));
+      P('Successfully rebased and updated refs/heads/'+r.head+'.');return;
+    }
+    const upA=ancestors(r,up);
+    const mine=[...ancestors(r,cur)].filter(s=>!upA.has(s)).sort((x,y)=>r.commits[x].n-r.commits[y].n);
+    if(mine.some(s=>r.commits[s].parents.length>1)){P('error: este simulador não refaz merges (rebase linear apenas).','r');return;}
+    const plan=replayPlan(r,mine,up);
+    if(plan.fail){
+      P('Auto-merging '+plan.file);P('CONFLICT (content): Merge conflict in '+plan.file,'r');
+      P('error: could not apply '+s7(plan.fail)+'... '+r.commits[plan.fail].msg.split('\n')[0],'r');
+      P('hint: este simulador não resolve conflitos de rebase; a operação foi cancelada.','y');return;
+    }
+    let tip=up;
+    for(const s of plan.steps)tip=mkCommit(r,s.msg,[tip],s.tree,s.author===(G.cfg['user.name']||'Aluno')?undefined:s.author);
+    r.reflog.unshift({sha:up,msg:'rebase (start): checkout '+name});
+    moveHead(r,tip,'rebase (finish): returning to '+(r.detached?'HEAD':'refs/heads/'+r.head));
+    applyTree(r,treeOf(r,tip));
+    P('Successfully rebased and updated refs/heads/'+r.head+'.');
+  };
+  function bisectStep(r){
+    const b=r.bisect;if(!b.bad||!b.good.length)return;
+    const goodA=new Set();b.good.forEach(g=>ancestors(r,g).forEach(s=>goodA.add(s)));
+    const cand=[...ancestors(r,b.bad)].filter(s=>!goodA.has(s)).sort((x,y)=>r.commits[x].n-r.commits[y].n);
+    if(cand.length<=1){
+      const s=cand[0]||b.bad,c=r.commits[s];
+      P(s+' is the first bad commit','g');P('commit '+s);P('Author: '+c.author+' <'+c.email+'>');P('');P('    '+c.msg.split('\n')[0]);
+      r.bisect.found=s;return;
+    }
+    const mid=cand[Math.floor((cand.length-1)/2)];
+    const left=cand.length-1,steps=Math.max(1,Math.ceil(Math.log2(cand.length)));
+    if(checkoutTree(r,mid)){
+      r.detached=mid;r.reflog.unshift({sha:mid,msg:'checkout: moving from '+(b.orig)+' to '+s7(mid)});
+      P('Bisecting: '+Math.floor(left/2)+' revision'+(Math.floor(left/2)===1?'':'s')+' left to test after this (roughly '+steps+' step'+(steps>1?'s':'')+')');
+      P('['+s7(mid)+'] '+r.commits[mid].msg.split('\n')[0]);
+    }
+  }
+  GIT.bisect=a=>{
+    const r=R();if(!r)return;const sub=a[0];
+    if(!sub){P('usage: git bisect (start|bad|good|reset|log) [<rev>]','y');return;}
+    if(sub==='start'){
+      const ch=changes(r);if(ch.staged.length||ch.unstaged.length){P('error: você tem alterações não commitadas; commite ou use stash antes do bisect.','r');return;}
+      r.bisect={bad:null,good:[],orig:r.detached?s7(r.detached):r.head,origHead:r.head,origDet:r.detached,log:[]};
+      const rest=a.slice(1).filter(x=>!x.startsWith('-'));
+      if(rest[0]){const s=resolve(r,rest[0]);if(!s){P("fatal: bad revision '"+rest[0]+"'",'r');return;}r.bisect.bad=s;}
+      if(rest[1]){const s=resolve(r,rest[1]);if(!s){P("fatal: bad revision '"+rest[1]+"'",'r');return;}r.bisect.good.push(s);}
+      P("status: waiting for both good and bad commits");if(r.bisect.bad&&r.bisect.good.length)bisectStep(r);
+      return;
+    }
+    if(!r.bisect){P("error: You need to start by \"git bisect start\"",'r');return;}
+    const b=r.bisect;
+    if(sub==='reset'){
+      const o=b.origDet||null;const bk=b.origHead;
+      if(o){const t=treeOf(r,o);r.detached=o;applyTree(r,t);}
+      else{r.detached=null;r.head=bk;applyTree(r,treeOf(r,r.branches[bk]));}
+      r.reflog.unshift({sha:headSha(r),msg:'checkout: moving from '+(r.detached?s7(r.detached):'bisect')+' to '+b.orig});
+      r.bisect=null;P("Previous HEAD position was restored; back on "+b.orig+".");return;
+    }
+    if(sub==='log'){b.log.forEach(l=>P(l));return;}
+    if(sub==='bad'||sub==='good'||sub==='new'||sub==='old'){
+      if(b.found){P('Bisect já concluído; use "git bisect reset".','y');return;}
+      const isBad=sub==='bad'||sub==='new';
+      const rev=a[1]||'HEAD',s=resolve(r,rev);
+      if(!s){P("error: Bad rev input: "+rev,'r');return;}
+      if(isBad)b.bad=s;else b.good.push(s);
+      b.log.push('git bisect '+(isBad?'bad':'good')+' '+s);
+      if(b.bad&&b.good.some(g=>!isAncestor(r,g,b.bad))){P('error: um commit "good" precisa ser ancestral do commit "bad".','r');if(isBad)b.bad=null;else b.good.pop();return;}
+      if(!b.bad||!b.good.length){P('status: waiting for '+(!b.bad?'bad':'good')+' commit');return;}
+      bisectStep(r);return;
+    }
+    P("usage: git bisect (start|bad|good|reset|log) [<rev>]",'y');
+  };
+  GIT.worktree=a=>{
+    const r=R();if(!r)return;r.worktrees=r.worktrees||{};
+    const sub=a[0]||'list',base='/home/aluno/'+(G.cwd==='~'?'':G.cwd);
+    const abs=p=>p.startsWith('/')?p:base.replace(/\/[^\/]*$/,'')+'/'+p.replace(/^\.\.\//,'').replace(/^\.\//,'');
+    if(sub==='list'){
+      PS(['',base.padEnd(34)+' '+(headSha(r)?s7(headSha(r)):'0000000')+' ['+(r.detached?'detached HEAD':r.head)+']']);
+      Object.entries(r.worktrees).forEach(([p,w])=>PS(['',p.padEnd(34)+' '+(r.branches[w.branch]?s7(r.branches[w.branch]):'0000000')+' ['+w.branch+']']));return;
+    }
+    if(sub==='add'){
+      const rest=a.slice(1);let nb=null;const pos=[];
+      for(let i=0;i<rest.length;i++){if(rest[i]==='-b'||rest[i]==='-B'){nb=rest[++i];}else if(!rest[i].startsWith('-'))pos.push(rest[i]);}
+      if(!pos.length){P('usage: git worktree add [-b <branch>] <path> [<commit-ish>]','y');return;}
+      const p=abs(pos[0]);if(r.worktrees[p]||p===base){P("fatal: '"+pos[0]+"' already exists",'r');return;}
+      let br=pos[1]||null;
+      if(nb){
+        if(r.branches[nb]!==undefined){P("fatal: a branch named '"+nb+"' already exists",'r');return;}
+        if(!headSha(r)){P('fatal: sem commits ainda.','r');return;}
+        const st=pos[1]?resolve(r,pos[1]):headSha(r);if(!st){P("fatal: invalid reference: "+pos[1],'r');return;}
+        r.branches[nb]=st;br=nb;P("Preparing worktree (new branch '"+nb+"')");
+      }else{
+        if(!br){br=pos[0].split('/').pop();
+          if(r.branches[br]===undefined){P("Preparing worktree (new branch '"+br+"')");r.branches[br]=headSha(r);}
+          else P("Preparing worktree (checking out '"+br+"')");}
+        else if(r.branches[br]===undefined){P("fatal: invalid reference: "+br,'r');return;}
+        else P("Preparing worktree (checking out '"+br+"')");
+        if(br===r.head&&!r.detached){P("fatal: '"+br+"' is already checked out at '"+base+"'",'r');return;}
+      }
+      r.worktrees[p]={branch:br};
+      const t=r.branches[br];P('HEAD is now at '+(t?s7(t)+' '+r.commits[t].msg.split('\n')[0]:'(sem commits)'));return;
+    }
+    if(sub==='remove'||sub==='prune'){
+      if(sub==='prune')return;
+      const p=abs(a.slice(1).filter(x=>!x.startsWith('-'))[0]||'');
+      if(!r.worktrees[p]){P("fatal: '"+(a[1]||'')+"' is not a working tree",'r');return;}
+      delete r.worktrees[p];return;
+    }
+    P('usage: git worktree (list|add|remove|prune)','y');
+  };
+
+
   /* ===== parte C: stash, tag, remotos, shell, despacho, visão ===== */
   GIT.stash=a=>{
     const r=R();if(!r)return;const wd=W();
@@ -957,7 +1096,7 @@ function createGit(){
   GIT.help=()=>{
     P(X('help1'),'b');
     P('  config init status add commit log show diff restore reset revert rm mv clean');
-    P('  branch switch checkout merge cherry-pick stash tag remote push fetch pull clone reflog');
+    P('  branch switch checkout merge cherry-pick rebase bisect worktree stash tag remote push fetch pull clone reflog');
     P(X('helpterm'),'d');
     P(X('helptip'),'d');
   };
@@ -1007,7 +1146,7 @@ function createGit(){
   SH.clear=()=>{};
 
   /* ---------- despacho ---------- */
-  const GIT_NAMES=['config','init','status','add','commit','log','show','diff','restore','reset','revert','rm','mv','clean','branch','switch','checkout','merge','cherry-pick','stash','tag','remote','push','fetch','pull','clone','reflog','ls-files','rev-parse','help'];
+  const GIT_NAMES=['config','init','status','add','commit','log','show','diff','restore','reset','revert','rm','mv','clean','branch','switch','checkout','merge','cherry-pick','rebase','bisect','worktree','stash','tag','remote','push','fetch','pull','clone','reflog','ls-files','rev-parse','help'];
   function run(line){
     OUT=[];line=line.trim();let NF=false;
     if(!line)return {out:OUT,err:false};

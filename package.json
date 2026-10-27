@@ -1,15 +1,15 @@
 {
   "name": "git-quest",
-  "version": "1.0.0",
-  "description": "Aprenda Git jogando: terminal simulado, 32 missões, XP, ranks, conquistas e diploma.",
+  "version": "1.1.0",
+  "description": "Aprenda Git jogando: terminal simulado, 40 missões, XP, ranks, conquistas e diploma.",
   "private": true,
   "license": "MIT",
   "author": "Prof. Me. Bruno Assunção Dias",
   "scripts": {
-    "test": "node tests/test-engine.js && node tests/test-missions.js && node tests/test-i18n.js && node tests/test-progress.js",
+    "test": "node tests/test-engine.js && node tests/test-missions.js && node tests/test-i18n.js && node tests/test-progress.js && node tests/test-trophies.js && node tests/test-real.js && node tests/test-pdf.js && node tests/test-pwa.js",
     "start": "npx --yes serve .",
-    "test:e2e": "node tests/e2e/play-all.js && node tests/e2e/professor.js",
-    "test:e2e:all": "LANGS=all node tests/e2e/play-all.js && node tests/e2e/professor.js"
+    "test:e2e": "node tests/e2e/play-all.js && node tests/e2e/extras.js && node tests/e2e/professor.js",
+    "test:e2e:all": "LANGS=all node tests/e2e/play-all.js && node tests/e2e/extras.js && node tests/e2e/professor.js"
   },
   "devDependencies": {
     "playwright": "^1.48.0"

@@ -18,9 +18,9 @@
 ### **खेलते हुए** Git सीखें। असली कमांड लिखें, स्टेशन जीतें और बादलों तक पहुँचें।
 
 <p>
-  <img alt="Missions" src="https://img.shields.io/badge/%E0%A4%AE%E0%A4%BF%E0%A4%B6%E0%A4%A8-32-2dd4bf?style=for-the-badge">
-  <img alt="Lines" src="https://img.shields.io/badge/%E0%A4%AE%E0%A5%87%E0%A4%9F%E0%A5%8D%E0%A4%B0%E0%A5%8B%20%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%A8%E0%A5%87%E0%A4%82-7-a78bfa?style=for-the-badge">
-  <img alt="Git commands" src="https://img.shields.io/badge/git%20%E0%A4%95%E0%A4%AE%E0%A4%BE%E0%A4%82%E0%A4%A1-30-fbbf24?style=for-the-badge">
+  <img alt="Missions" src="https://img.shields.io/badge/%E0%A4%AE%E0%A4%BF%E0%A4%B6%E0%A4%A8-40-2dd4bf?style=for-the-badge">
+  <img alt="Lines" src="https://img.shields.io/badge/%E0%A4%AE%E0%A5%87%E0%A4%9F%E0%A5%8D%E0%A4%B0%E0%A5%8B%20%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%A8%E0%A5%87%E0%A4%82-9-a78bfa?style=for-the-badge">
+  <img alt="Git commands" src="https://img.shields.io/badge/git%20%E0%A4%95%E0%A4%AE%E0%A4%BE%E0%A4%82%E0%A4%A1-33-fbbf24?style=for-the-badge">
   <img alt="Languages" src="https://img.shields.io/badge/%E0%A4%AD%E0%A4%BE%E0%A4%B7%E0%A4%BE%E0%A4%8F%E0%A4%81-8-f97316?style=for-the-badge">
   <img alt="Zero dependencies" src="https://img.shields.io/badge/%E0%A4%A8%E0%A4%BF%E0%A4%B0%E0%A5%8D%E0%A4%AD%E0%A4%B0%E0%A4%A4%E0%A4%BE%E0%A4%8F%E0%A4%81-0-4ade80?style=for-the-badge">
   <img alt="MIT" src="https://img.shields.io/badge/%E0%A4%B2%E0%A4%BE%E0%A4%87%E0%A4%B8%E0%A5%87%E0%A4%82%E0%A4%B8-MIT-38bdf8?style=for-the-badge">
@@ -59,7 +59,7 @@
 
 ---
 
-## 🗺️ खेल का नक्शा: 7 मेट्रो लाइनें
+## 🗺️ खेल का नक्शा: 9 मेट्रो लाइनें
 
 हर **दुनिया एक लाइन** है और हर **मिशन एक स्टेशन** (हीरे के आकार वाले क्विज़ हैं)। विद्यार्थी मौजूदा स्टेशन पूरा करने के बाद ही अगले पर जा सकता है।
 
@@ -84,7 +84,9 @@ flowchart LR
 | 🔵 **6** | दराज़ और लेबल | `git stash`, `git tag` | 3 |
 | 🟩 **7** | बादलों की ओर | `git remote`, `push -u`, `pull`, `clone`, **अंतिम बॉस** | 6 |
 
-**कुल 32 मिशन**: 26 कमांड वाले और 6 झटपट क्विज़।
+**कुल 40 मिशन**: 33 कमांड वाले (3 असली GitHub पर) और 7 झटपट क्विज़।
+
+लाइन 8 और 9 में **उन्नत Git** (`rebase`, `bisect`, `worktree`) और **असली GitHub पर मिशन** (रिपॉज़िटरी बनाना, fork, Pull Request; GitHub के सार्वजनिक API से जाँच) जुड़े हैं। रास्ते में **PlayStation शैली की 14 ट्रॉफ़ियाँ** (ब्रॉन्ज़, सिल्वर, गोल्ड, प्लैटिनम) मिलती हैं, जो डिप्लोमा के पिछले पृष्ठ पर ट्रैक के साथ दिखती हैं। गेम **ऑफ़लाइन** भी चलता है (PWA)।
 
 ---
 
@@ -139,7 +141,7 @@ flowchart LR
 
 ## 🧰 सिम्युलेटर द्वारा समर्थित कमांड
 
-**Git (30):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
+**Git (33):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `rebase` · `bisect` · `worktree` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
 
 **Shell:** `ls` · `cat` · `touch` · `echo` (`>` / `>>`) · `mkdir` · `cd` · `pwd` · `rm` · `clear`
 

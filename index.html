@@ -4,14 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Git Quest</title>
-<meta name="description" content="Git Quest: aprenda Git jogando. Terminal simulado, 32 missões, XP, conquistas e diploma. 8 idiomas.">
+<meta name="description" content="Git Quest: aprenda Git jogando. Terminal simulado, 40 missões, XP, troféus e diploma. 8 idiomas. Funciona offline.">
 <meta name="theme-color" content="#0a0f1e">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Git Quest">
-<meta property="og:description" content="Aprenda Git jogando: 7 linhas de metrô, 32 missões, um comando por vez.">
-<meta property="og:image" content="https://bruno-a-dias.github.io/git-quest/docs/01-inicio.png">
+<meta property="og:description" content="Aprenda Git jogando: 9 linhas de metrô, 40 missões, um comando por vez.">
+<meta property="og:image" content="https://bruno-a-dias.github.io/git-quest/assets/cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:image" content="https://bruno-a-dias.github.io/git-quest/assets/cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icons/icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=Great+Vibes&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
@@ -33,7 +38,7 @@
       </svg>
       <div>
         <h1>Git Quest</h1>
-        <small data-i18n="tagline">Aprenda Git jogando: 7 linhas, um comando por vez</small>
+        <small data-i18n="tagline">Aprenda Git jogando: 9 linhas, um comando por vez</small>
       </div>
     </div>
     <div class="hud">
@@ -45,6 +50,8 @@
       </div>
       <span class="combo" id="combo" hidden></span>
       <button class="btn sm" id="btnSound" aria-pressed="false" data-i18n-attr="title:sound_title" title="Ligar ou desligar os efeitos sonoros">Som: desligado</button>
+      <button class="btn sm" id="btnTro" data-i18n-attr="title:tro_title" title="Sala de troféus">🏆</button>
+      <button class="btn sm" id="btnRev" data-i18n-attr="title:rev_title" title="Revisão espaçada" hidden>Revisão</button>
       <button class="btn sm" id="btnProgress" data-i18n="prog_btn" data-i18n-attr="title:prog_title" title="Salvar ou carregar seu progresso">Progresso</button>
       <button class="btn sm" id="btnDiploma" data-i18n="diploma_btn" hidden>Ver diploma</button>
       <button class="btn sm" id="btnReset" data-i18n-attr="title:reset_title" title="Apaga o progresso deste navegador" data-i18n="reset">Recomeçar tudo</button>
@@ -100,7 +107,7 @@
 <canvas id="confetti" aria-hidden="true"></canvas>
 
 <div class="diploma" id="diploma" hidden role="dialog" aria-modal="true" data-i18n-attr="aria-label:diploma_aria" aria-label="Diploma Git Quest">
-  <div class="cert">
+  <div class="cert" id="certfront">
     <canvas id="certseal" class="certseal" width="300" height="330" aria-hidden="true"></canvas>
     <small data-i18n="cert_small">Certificado de conclusão</small>
     <h2>Git Quest</h2>
@@ -113,7 +120,31 @@
     <p class="mono certcode"><span data-i18n="cert_code">Código de verificação</span>: <b id="certcode"></b></p>
     <p style="font-size:13px;color:var(--mute)" data-i18n="cert_print">Tire um print desta tela para guardar o seu diploma.</p>
     <div class="winacts" style="justify-content:center;margin-top:14px"><button class="btn pri" id="certpng" data-i18n="cert_png">Baixar imagem do diploma</button><button class="btn" id="certclose" data-i18n="cert_back">Voltar ao jogo</button></div>
+    <div class="winacts" style="justify-content:center;margin-top:8px"><button class="btn" id="certflip" data-i18n="cert_backside">Verso</button><button class="btn" id="certpdf" data-i18n="cert_pdf">Baixar PDF</button></div>
     <div id="certpreview" hidden><p class="certhint" data-i18n="cert_png_hint">Se o download não começar, toque e segure a imagem abaixo para salvar.</p><img id="certimg" alt="Imagem do diploma" data-i18n-attr="alt:cert_png_alt"></div>
+  </div>
+  <div class="cert certback" id="certbackbox" hidden>
+    <img id="certbackimg" alt="Verso do diploma" data-i18n-attr="alt:back_alt">
+    <div class="winacts" style="justify-content:center;margin-top:14px"><button class="btn" id="certunflip" data-i18n="cert_front">Frente</button><button class="btn pri" id="certbackpng" data-i18n="back_png">Baixar o verso</button><button class="btn" id="certpdf2" data-i18n="cert_pdf">Baixar PDF</button><button class="btn" id="certclose2" data-i18n="cert_back">Voltar ao jogo</button></div>
+  </div>
+</div>
+
+<div class="diploma" id="tro" hidden role="dialog" aria-modal="true" aria-labelledby="troh">
+  <div class="cert prog trowrap">
+    <h2 id="troh" data-i18n="tro_title">Sala de troféus</h2>
+    <p data-i18n="tro_intro"></p>
+    <p class="certcode"><b id="trocount"></b></p>
+    <div id="trobody"></div>
+    <div class="winacts" style="justify-content:center"><button class="btn" id="troclose" data-i18n="tro_close">Fechar</button></div>
+  </div>
+</div>
+
+<div class="diploma" id="rev" hidden role="dialog" aria-modal="true" aria-labelledby="revh">
+  <div class="cert prog">
+    <h2 id="revh" data-i18n="rev_title">Revisão espaçada</h2>
+    <p data-i18n="rev_intro"></p>
+    <div id="revbody"></div>
+    <div class="winacts" style="justify-content:center"><button class="btn" id="revclose" data-i18n="rev_close">Fechar</button></div>
   </div>
 </div>
 
@@ -141,9 +172,14 @@
 <script src="js/lang/ru.js"></script>
 <script src="js/lang/hi.js"></script>
 <script src="js/progress.js"></script>
+<script src="js/trophies.js"></script>
+<script src="js/pdf.js"></script>
+<script src="js/real.js"></script>
 <script src="js/core.js"></script>
 <script src="js/ui-panels.js"></script>
 <script src="js/ui-game.js"></script>
+<script src="js/ui-extras.js"></script>
 <script src="js/ui-share.js"></script>
+<script src="js/pwa.js"></script>
 </body>
 </html>

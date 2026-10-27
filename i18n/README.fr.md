@@ -18,9 +18,9 @@
 ### Apprenez Git en **jouant**. Tapez de vraies commandes, gagnez des stations et rejoignez le cloud.
 
 <p>
-  <img alt="Missions" src="https://img.shields.io/badge/missions-32-2dd4bf?style=for-the-badge">
-  <img alt="Lines" src="https://img.shields.io/badge/lignes%20de%20m%C3%A9tro-7-a78bfa?style=for-the-badge">
-  <img alt="Git commands" src="https://img.shields.io/badge/commandes%20git-30-fbbf24?style=for-the-badge">
+  <img alt="Missions" src="https://img.shields.io/badge/missions-40-2dd4bf?style=for-the-badge">
+  <img alt="Lines" src="https://img.shields.io/badge/lignes%20de%20m%C3%A9tro-9-a78bfa?style=for-the-badge">
+  <img alt="Git commands" src="https://img.shields.io/badge/commandes%20git-33-fbbf24?style=for-the-badge">
   <img alt="Languages" src="https://img.shields.io/badge/langues-8-f97316?style=for-the-badge">
   <img alt="Zero dependencies" src="https://img.shields.io/badge/d%C3%A9pendances-0-4ade80?style=for-the-badge">
   <img alt="MIT" src="https://img.shields.io/badge/licence-MIT-38bdf8?style=for-the-badge">
@@ -59,7 +59,7 @@ Les deux adresses servent exactement les mêmes fichiers. Si l’une est en pann
 
 ---
 
-## 🗺️ La carte du jeu : 7 lignes de métro
+## 🗺️ La carte du jeu : 9 lignes de métro
 
 Chaque **monde est une ligne** et chaque **mission est une station** (les losanges sont des quiz). L’élève ne passe à la station suivante qu’après avoir terminé la précédente.
 
@@ -84,7 +84,9 @@ flowchart LR
 | 🔵 **6** | Tiroir et étiquettes | `git stash`, `git tag` | 3 |
 | 🟩 **7** | Cap sur le cloud | `git remote`, `push -u`, `pull`, `clone`, **boss final** | 6 |
 
-**32 missions au total** : 26 de commande et 6 quiz éclair.
+**40 missions au total** : 33 de commande (3 sur le vrai GitHub) et 7 quiz éclair.
+
+Les lignes 8 et 9 ajoutent du **Git avancé** (`rebase`, `bisect`, `worktree`) et des **missions sur le vrai GitHub** (créer un dépôt, fork, Pull Request, vérifiés par l’API publique de GitHub). En chemin, on gagne **14 trophées façon PlayStation** (bronze, argent, or, platine), affichés au verso du diplôme à côté des parcours. Le jeu fonctionne aussi **hors ligne** (PWA).
 
 ---
 
@@ -139,7 +141,7 @@ Les drapeaux du jeu sont des **SVG dessinés à la main** (les emoji de drapeau 
 
 ## 🧰 Commandes prises en charge par le simulateur
 
-**Git (30):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
+**Git (33):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `rebase` · `bisect` · `worktree` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
 
 **Shell:** `ls` · `cat` · `touch` · `echo` (`>` / `>>`) · `mkdir` · `cd` · `pwd` · `rm` · `clear`
 

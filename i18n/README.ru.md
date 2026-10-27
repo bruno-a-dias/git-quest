@@ -18,9 +18,9 @@
 ### Учите Git **играя**. Вводите настоящие команды, захватывайте станции и добирайтесь до облака.
 
 <p>
-  <img alt="Missions" src="https://img.shields.io/badge/%D0%BC%D0%B8%D1%81%D1%81%D0%B8%D0%B9-32-2dd4bf?style=for-the-badge">
-  <img alt="Lines" src="https://img.shields.io/badge/%D0%BB%D0%B8%D0%BD%D0%B8%D0%B9%20%D0%BC%D0%B5%D1%82%D1%80%D0%BE-7-a78bfa?style=for-the-badge">
-  <img alt="Git commands" src="https://img.shields.io/badge/%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%20git-30-fbbf24?style=for-the-badge">
+  <img alt="Missions" src="https://img.shields.io/badge/%D0%BC%D0%B8%D1%81%D1%81%D0%B8%D0%B9-40-2dd4bf?style=for-the-badge">
+  <img alt="Lines" src="https://img.shields.io/badge/%D0%BB%D0%B8%D0%BD%D0%B8%D0%B9%20%D0%BC%D0%B5%D1%82%D1%80%D0%BE-9-a78bfa?style=for-the-badge">
+  <img alt="Git commands" src="https://img.shields.io/badge/%D0%BA%D0%BE%D0%BC%D0%B0%D0%BD%D0%B4%20git-33-fbbf24?style=for-the-badge">
   <img alt="Languages" src="https://img.shields.io/badge/%D1%8F%D0%B7%D1%8B%D0%BA%D0%BE%D0%B2-8-f97316?style=for-the-badge">
   <img alt="Zero dependencies" src="https://img.shields.io/badge/%D0%B7%D0%B0%D0%B2%D0%B8%D1%81%D0%B8%D0%BC%D0%BE%D1%81%D1%82%D0%B5%D0%B9-0-4ade80?style=for-the-badge">
   <img alt="MIT" src="https://img.shields.io/badge/%D0%BB%D0%B8%D1%86%D0%B5%D0%BD%D0%B7%D0%B8%D1%8F-MIT-38bdf8?style=for-the-badge">
@@ -59,7 +59,7 @@
 
 ---
 
-## 🗺️ Карта игры: 7 линий метро
+## 🗺️ Карта игры: 9 линий метро
 
 Каждый **мир — это линия**, а каждая **миссия — станция** (ромбики — это квизы). Следующая станция открывается только после прохождения текущей.
 
@@ -84,7 +84,9 @@ flowchart LR
 | 🔵 **6** | Ящик и метки | `git stash`, `git tag` | 3 |
 | 🟩 **7** | Курс на облако | `git remote`, `push -u`, `pull`, `clone`, **финальный босс** | 6 |
 
-**Всего 32 миссии**: 26 командных и 6 блиц-квизов.
+**Всего 40 миссий**: 33 командные (3 на настоящем GitHub) и 7 блиц-квизов.
+
+Линии 8 и 9 добавляют **продвинутый Git** (`rebase`, `bisect`, `worktree`) и **миссии на настоящем GitHub** (создать репозиторий, fork, Pull Request; проверка через публичный API GitHub). По пути ученик получает **14 трофеев в стиле PlayStation** (бронза, серебро, золото, платина), которые видны на обороте диплома рядом с треками. Игра работает и **офлайн** (PWA).
 
 ---
 
@@ -139,7 +141,7 @@ flowchart LR
 
 ## 🧰 Команды, поддерживаемые симулятором
 
-**Git (30):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
+**Git (33):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `rebase` · `bisect` · `worktree` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
 
 **Shell:** `ls` · `cat` · `touch` · `echo` (`>` / `>>`) · `mkdir` · `cd` · `pwd` · `rm` · `clear`
 

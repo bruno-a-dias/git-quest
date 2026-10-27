@@ -16,7 +16,7 @@ const I18N=(function(){
     {code:'hi',name:'हिन्दी',locale:'hi-IN',flag:FL('<rect width="30" height="20" fill="#fff"/><rect width="30" height="6.67" fill="#ff9933"/><rect y="13.33" width="30" height="6.67" fill="#138808"/><circle cx="15" cy="10" r="2.5" fill="none" stroke="#000080" stroke-width=".7"/><path d="M15 7.5V12.5M12.5 10H17.5M13.2 8.2L16.8 11.8M16.8 8.2L13.2 11.8" stroke="#000080" stroke-width=".35"/>')}
   ];
   const D={pt:{ui:{
-    tagline:'Aprenda Git jogando: 7 linhas, um comando por vez',
+    tagline:'Aprenda Git jogando: 9 linhas, um comando por vez',
     sound_on:'Som: ligado',sound_off:'Som: desligado',sound_title:'Ligar ou desligar os efeitos sonoros',
     diploma_btn:'Ver diploma',reset:'Recomeçar tudo',reset_title:'Apaga o progresso deste navegador',reset_confirm:'Confirmar: apagar progresso?',lang_label:'Idioma',
     map_h:'Mapa de linhas',areas_h:'As áreas do Git',areas_aria:'As quatro áreas do Git',
@@ -37,8 +37,62 @@ const I18N=(function(){
     learned:'O que você aprendeu: ',in_guide:'{0} do guia',part:'Parte',parts:'Partes',to:'a',and:'e',
     bonus:'Bônus de +25 XP: sem erros e sem dicas.',next:'Próxima missão',diploma_see:'Ver meu diploma',keep_term:'Continuar no terminal',
  prog_btn:'Progresso',prog_title:'Salvar ou carregar seu progresso',prog_h:'Meu progresso',prog_intro:'Seu progresso fica só neste navegador. Copie o código abaixo (ou salve o arquivo) para entregar ao professor ou continuar em outro aparelho.',prog_copy:'Copiar código',prog_copied:'Copiado!',prog_file:'Salvar arquivo',prog_import_h:'Carregar progresso',prog_import_ph:'Cole aqui um código de progresso',prog_import_btn:'Carregar',prog_import_confirm:'Confirmar: substituir o progresso atual?',prog_import_ok:'Progresso carregado: {0} XP e {1} missões.',prog_import_bad:'Código inválido. Copie-o novamente por inteiro.',prog_close:'Fechar',cert_png:'Baixar imagem do diploma',cert_png_hint:'Se o download não começar, toque e segure a imagem abaixo para salvar.',cert_code:'Código de verificação',cert_png_alt:'Imagem do diploma',
-    banner_mission:'Missão {0} de {1} · {2}',banner_quiz:'O terminal está livre enquanto você pensa. Explore à vontade.',banner_help:'Digite help para ver os comandos. Setas ↑ ↓ repetem comandos e Tab completa.'
-  }}};
+    banner_mission:'Missão {0} de {1} · {2}',banner_quiz:'O terminal está livre enquanto você pensa. Explore à vontade.',banner_help:'Digite help para ver os comandos. Setas ↑ ↓ repetem comandos e Tab completa.',
+ real_user_ph:"Seu usuário no GitHub",
+ real_repo_ph:"Nome do repositório",
+ real_pr_ph:"Endereço do Pull Request",
+ real_verify:"Conferir no GitHub",
+ real_checking:"Conferindo…",
+ real_ok:"Confirmado no GitHub!",
+ real_notfound:"Não encontrei. Confira a grafia e se ele é público.",
+ real_mismatch:"Existe, mas não é o que a missão pede.",
+ real_offline:"Não consegui falar com o GitHub (sem internet ou limite atingido).",
+ real_manual:"Eu fiz: confirmar sem conferir",
+ tro_btn:"Troféus",
+ tro_title:"Sala de troféus",
+ tro_intro:"Conquiste troféus de bronze, prata e ouro. Com todos em mãos, a platina é sua.",
+ tro_bronze:"Bronze",
+ tro_silver:"Prata",
+ tro_gold:"Ouro",
+ tro_platinum:"Platina",
+ tro_locked:"Bloqueado",
+ tro_count:"{0} de {1} troféus",
+ tro_new:"Troféu desbloqueado",
+ tro_close:"Fechar",
+ ch_btn:"Desafio: contra o relógio",
+ ch_left:"Tempo restante: {0}s",
+ ch_won:"Desafio vencido! +{0} XP",
+ ch_lost:"O tempo acabou. Termine sem o bônus.",
+ rev_btn:"Revisão",
+ rev_title:"Revisão espaçada",
+ rev_intro:"Missões feitas com ajuda voltam depois de alguns dias. Refaça sem dicas para dominá-las.",
+ rev_empty:"Nada para revisar. Ótimo trabalho!",
+ rev_now:"Revisar agora",
+ rev_in:"em {0} d",
+ rev_do:"Refazer",
+ rev_close:"Fechar",
+ rev_ok:"Revisão feita! Nos vemos em {0} dias.",
+ rev_gone:"Dominada! Saiu da revisão.",
+ cert_front:"Frente",
+ cert_backside:"Verso",
+ cert_pdf:"Baixar PDF (frente e verso)",
+ back_png:"Baixar o verso (PNG)",
+ back_alt:"Verso do diploma",
+ back_title:"Histórico do curso",
+ back_tracks:"Trilhas",
+ back_trophies:"Troféus",
+ back_stats:"Resumo",
+ back_holder:"Titular",
+ back_issued:"Emitido em",
+ back_period:"Período",
+ back_xp:"XP total",
+ back_rank:"Título",
+ back_missions:"Missões",
+ back_badges:"Conquistas",
+ back_challenges:"Desafios vencidos",
+ back_perfect:"Missões perfeitas",
+ back_note:"Certificado lúdico emitido pelo Git Quest. Autenticidade: confira o código de verificação no site."
+  },trophies:{b_first:["Primeiro passo","Conclua a sua primeira missão."],b_w1:["Linha um","Conclua o Mundo 1."],b_quiz:["Mente ágil","Acerte um quiz de primeira."],b_combo:["Sem tropeços","Conclua 3 missões seguidas sem usar dicas."],b_save:["São e salvo","Exporte o seu código ou arquivo de progresso."],s_half:["Na metade do caminho","Conclua metade das missões."],s_branch:["Dono das branches","Conclua o Mundo 4."],s_conflict:["Domador de conflitos","Conclua o Mundo 5."],s_clock:["Contra o relógio","Vença 3 desafios cronometrados."],g_cloud:["Cabeça nas nuvens","Conclua o Mundo 7."],g_adv:["Nível avançado","Conclua o Mundo 8."],g_real:["De verdade","Conclua o Mundo 9 no GitHub real."],g_perfect:["Perfeccionista","Termine 10 missões sem erros e sem dicas."],p_all:["Lenda do Git","Conquiste todos os outros troféus e conclua todas as missões."]}}};
   let lang='pt';const subs=[];
   const fmt=(s,a)=>String(s).replace(/\{(\d+)\}/g,(_,i)=>a[i]===undefined?'':a[i]);
   const cur=()=>D[lang]||D.pt;
@@ -47,6 +101,7 @@ const I18N=(function(){
   function has(code){return !!D[code];}
   function world(i){const w=cur().worlds;return (w&&w[i])||WORLDS[i].t;}
   function rank(i){const r=cur().ranks;return (r&&r[i])||RANKS[i][1];}
+  function trophy(id){const o=(cur().trophies&&cur().trophies[id])||(D.pt.trophies&&D.pt.trophies[id]);return o?{t:o[0],d:o[1]}:{t:id,d:''};}
   function badge(b){const o=cur().badges&&cur().badges[b.id];return o?{t:o[0],d:o[1]}:{t:b.t,d:b.d};}
   /* missão localizada (sem alterar MISSIONS): comandos e soluções continuam iguais */
   function m(i){
@@ -79,7 +134,7 @@ const I18N=(function(){
     const n=(navigator.language||'pt').toLowerCase().slice(0,2);
     if(D[n])return n;return 'en';
   }
-  const api={LANGS,add,has,t,world,rank,badge,m,doc,apply,set,detect,get lang(){return lang;},get locale(){return LANGS.find(l=>l.code===lang).locale;},onChange:f=>subs.push(f)};
+  const api={LANGS,add,has,t,world,rank,badge,trophy,m,doc,apply,set,detect,get lang(){return lang;},get locale(){return LANGS.find(l=>l.code===lang).locale;},onChange:f=>subs.push(f)};
   /* o motor de Git pergunta aqui se há tradução das mensagens do simulador */
   globalThis.GQ_X=(k,...a)=>{if(lang==='pt')return null;const u=D[lang]&&D[lang].ui;const s=u&&u['x_'+k];return s?fmt(s,a):null;};
   return api;

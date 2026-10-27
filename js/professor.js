@@ -53,9 +53,9 @@ function derive(d){
   const done=Object.keys(d.d).map(Number),set=new Set(done);
   let next=0;while(next<N&&set.has(next))next++;
   const name=(d.n||'(sem nome)').trim();
-  return {id:d.p||('s:'+name.toLowerCase()),n:name,x:d.x,pct:Math.round(d.x/TOTAL*100),cnt:done.length,rk:rankIdx(d.x),next,
+  return {id:d.p||('s:'+name.toLowerCase()),n:name,x:d.x,pct:Math.min(100,Math.round(d.x/TOTAL*100)),cnt:done.length,rk:rankIdx(d.x),next,
     nextTxt:next>=N?'Concluiu tudo':`${next+1}. ${MISSIONS[next].title}`,
-    code:done.length===N?GQP.diplomaCode(name,d.x,done):'',t:d.t||0,set,raw:d,finished:done.length===N};
+    tro:(d.tr||[]).filter(id=>GQT.TROPHIES.some(t=>t.id===id)),code:done.length===N?GQP.diplomaCode(name,d.x,done):'',t:d.t||0,set,raw:d,finished:done.length===N};
 }
 function rows(){
   const l=Object.values(turma()).map(derive);
@@ -181,6 +181,9 @@ function openStudent(id){
   const add=(k,v)=>{const r=el('div');r.appendChild(el('span','mute',k));r.appendChild(el('b',null,v));g.appendChild(r);};
   add('Missões',s.cnt+'/'+N);add('Último envio',s.t?new Date(s.t).toLocaleString('pt-BR')+' ('+ago(s.t)+')':'—');
   add('Idioma do jogo',(d.l||'—').toUpperCase());add('Código do diploma',s.code||'ainda não concluiu');
+  const cn=GQT.counts(s.tro),sx=d.st||{};
+  add('Troféus',s.tro.length+'/'+GQT.TROPHIES.length+' (bronze '+cn.bronze.have+', prata '+cn.silver.have+', ouro '+cn.gold.have+', platina '+cn.platinum.have+')');
+  add('Desafios vencidos / missões perfeitas',(sx.c|0)+' / '+(sx.p|0));
   const bb=$('stubadges');bb.textContent='';
   const earned=(d.b||[]).map(id=>BADGES.find(b=>b.id===id)).filter(Boolean);
   if(earned.length)earned.forEach(b=>bb.appendChild(el('span',null,b.t)));else bb.appendChild(el('span','mute','Sem conquistas ainda'));
@@ -242,8 +245,8 @@ const q=s=>'"'+String(s).replace(/"/g,'""')+'"';
 $('csv').addEventListener('click',()=>{
   const l=rows().sort((a,b)=>b.x-a.x);
   if(!l.length){msg('Não há alunos para exportar.','err');return;}
-  const head=['Aluno','XP','Percentual','Missões concluídas','Título','Está em','Código do diploma','Enviado em','Situação'];
-  const lines=[head.map(q).join(';')].concat(l.map(s=>[s.n,s.x,s.pct,s.cnt,RANKS[s.rk][1],s.nextTxt,s.code,s.t?new Date(s.t).toLocaleString('pt-BR'):'',s.stTxt.replace(/^[^\wÀ-ÿ—]+/,'')].map(q).join(';')));
+  const head=['Aluno','XP','Percentual','Missões concluídas','Título','Está em','Código do diploma','Enviado em','Situação','Troféus','Platina'];
+  const lines=[head.map(q).join(';')].concat(l.map(s=>[s.n,s.x,s.pct,s.cnt,RANKS[s.rk][1],s.nextTxt,s.code,s.t?new Date(s.t).toLocaleString('pt-BR'):'',s.stTxt.replace(/^[^\wÀ-ÿ—]+/,''),s.tro.length,s.tro.includes('p_all')?'sim':'não'].map(q).join(';')));
   download(new Blob(['﻿'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}),'git-quest-'+slug(klass().name)+'.csv');
 });
 const slug=s=>(s||'turma').normalize('NFKD').replace(/[^\w]+/g,'-').replace(/^-+|-+$/g,'').toLowerCase()||'turma';

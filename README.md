@@ -18,9 +18,9 @@
 ### Aprenda Git **jogando**. Digite comandos de verdade, conquiste estações e chegue à nuvem.
 
 <p>
-  <img alt="Missões" src="https://img.shields.io/badge/miss%C3%B5es-32-2dd4bf?style=for-the-badge">
-  <img alt="Linhas" src="https://img.shields.io/badge/linhas%20de%20metr%C3%B4-7-a78bfa?style=for-the-badge">
-  <img alt="Comandos" src="https://img.shields.io/badge/comandos%20git-30-fbbf24?style=for-the-badge">
+  <img alt="Missões" src="https://img.shields.io/badge/miss%C3%B5es-40-2dd4bf?style=for-the-badge">
+  <img alt="Linhas" src="https://img.shields.io/badge/linhas%20de%20metr%C3%B4-9-a78bfa?style=for-the-badge">
+  <img alt="Comandos" src="https://img.shields.io/badge/comandos%20git-33-fbbf24?style=for-the-badge">
   <img alt="Idiomas" src="https://img.shields.io/badge/idiomas-8-f97316?style=for-the-badge">
   <img alt="Zero dependências" src="https://img.shields.io/badge/depend%C3%AAncias-zero-4ade80?style=for-the-badge">
   <img alt="Licença MIT" src="https://img.shields.io/badge/licen%C3%A7a-MIT-38bdf8?style=for-the-badge">
@@ -68,7 +68,7 @@ Os dois endereços servem exatamente os mesmos arquivos. Se um estiver fora do a
 
 ---
 
-## 🗺️ O mapa do jogo: 7 linhas de metrô
+## 🗺️ O mapa do jogo: 9 linhas de metrô
 
 Cada **mundo é uma linha** e cada **missão é uma estação** (as de losango são quizzes). O aluno só avança para a estação seguinte depois de completar a atual.
 
@@ -80,7 +80,9 @@ flowchart LR
     D --> E["🟠 Linha 5<br/>Zona de conflito"]
     E --> F["🔵 Linha 6<br/>Gaveta e etiquetas"]
     F --> G["🟩 Linha 7<br/>Rumo à nuvem"]
-    G --> H["🏆 Diploma"]
+    G --> I["🌹 Linha 8<br/>Nível avançado"]
+    I --> J["⚪ Linha 9<br/>GitHub de verdade"]
+    J --> H["🏆 Diploma"]
 ```
 
 | Linha | Tema | O que o aluno aprende | Missões |
@@ -92,8 +94,10 @@ flowchart LR
 | 🟠 **5** | Zona de conflito | Conflito de merge e leitura dos marcadores | 2 |
 | 🔵 **6** | Gaveta e etiquetas | `git stash`, `git tag` | 3 |
 | 🟩 **7** | Rumo à nuvem | `git remote`, `push -u`, `pull`, `clone`, **chefe final** | 6 |
+| 🌹 **8** | Nível avançado | `git rebase`, `git bisect`, `git worktree`, merge `--ff-only` | 5 |
+| ⚪ **9** | GitHub de verdade | criar repositório, **fork** e **Pull Request** de verdade (conferidos pela API pública do GitHub) | 3 |
 
-**Total: 32 missões**, sendo 26 de comando e 6 quizzes relâmpago.
+**Total: 40 missões**, sendo 33 de comando (3 delas no GitHub real) e 7 quizzes relâmpago.
 
 ---
 
@@ -103,10 +107,14 @@ flowchart LR
 - 🧩 **As 4 áreas do Git, animadas**: pasta de trabalho → staging → repositório → remoto. Os arquivos "voam" de uma área para outra a cada `add`, `commit` e `push`.
 - 🌿 **Mapa de commits ao vivo**: grafo estilo mapa de metrô com branches, tags, `HEAD` e o remoto, atualizado a cada comando.
 - ⚡ **XP, combo e ranks**: seis níveis, do *Estagiário(a) de commits* ao *Mestre(a) do Git*. Missões seguidas sem dica acendem o combo.
+- 🏆 **Troféus estilo PlayStation**: 14 troféus de **bronze, prata, ouro e platina** (a platina exige todos os outros). Aparecem na sala de troféus, em toasts e no verso do diploma.
+- ⏱️ **Desafio contra o relógio**: o aluno liga o cronômetro numa missão e ganha **+50 XP** se terminar a tempo.
+- 🔁 **Revisão espaçada**: missões feitas com dica voltam depois de 1, 2 e 4 dias para o aluno refazer sem ajuda.
+- 📲 **Funciona offline e instala como app** (PWA): depois da primeira visita, o jogo abre sem internet.
 - 🏅 **Conquistas**: *Primeiro commit*, *Viajante do tempo*, *Caçador de conflitos*, *Mestre da gaveta*, *Cabeça nas nuvens*, *Clonador*, *Chefão derrotado* e *Sem muletas*.
 - 💡 **Dicas em três degraus**: Dica 1, Dica 2 e Ver solução (cada linha da solução é clicável e já cai no terminal).
 - 🎉 **Confete, sons e toasts** (o som vem desligado e o aluno liga se quiser).
-- 🎓 **Diploma final** com o nome do aluno, XP, título e conquistas, pronto para o print.
+- 🎓 **Diploma final** de luxo (moldura dourada, selo e assinatura) com **verso**: trilhas e troféus lado a lado, com a numeração conquistada, resumo, período e código de verificação. Baixe em PNG (frente e verso) ou em **PDF**.
 - 💾 **Progresso salvo** no navegador, com botão para recomeçar tudo.
 - 🌍 **8 idiomas, trocados com um clique** (bandeiras no topo): 🇧🇷 Português, 🇬🇧 English, 🇪🇸 Español, 🇫🇷 Français, 🇩🇪 Deutsch, 🇮🇹 Italiano, 🇷🇺 Русский e 🇮🇳 हिन्दी. Missões, dicas, quizzes, conquistas e até as mensagens do terminal são traduzidos, e a escolha fica salva.
 - 📱 **Responsivo**: funciona no celular, e respeita `prefers-reduced-motion`.
@@ -148,7 +156,7 @@ As bandeiras do jogo são **SVG desenhados à mão** (emoji de bandeira não apa
 
 ## 🧰 Comandos suportados no simulador
 
-**Git (30):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
+**Git (33):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `rebase` · `bisect` · `worktree` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
 
 **Shell:** `ls` · `cat` · `touch` · `echo` (com `>` e `>>`) · `mkdir` · `cd` · `pwd` · `rm` · `clear`
 
@@ -164,7 +172,7 @@ Pensado para a sala de aula:
 - 📖 Cada missão indica a **parte do guia** correspondente (Partes 1 a 14), para casar o jogo com o material de referência.
 - 🔁 Pode ser usado como **aquecimento** (10 minutos), **laboratório** ou **tarefa de casa**: o progresso fica salvo no navegador de cada aluno.
 - 🔒 Sem login, sem servidor, sem coleta de dados. Basta hospedar os arquivos estáticos (GitHub Pages, Vercel, Netlify ou um pendrive).
-- 🧪 As 26 missões de comando têm **solução testada automaticamente** em todos os idiomas (`npm test`), e um teste de navegador (`npm run test:e2e`) joga as 32 missões de verdade, então nenhuma estação fica impossível.
+- 🧪 As 33 missões de comando têm **solução testada automaticamente** em todos os idiomas (`npm test`), e um teste de navegador (`npm run test:e2e`) joga as 40 missões de verdade, então nenhuma estação fica impossível.
 - 📊 **Painel da turma:** cada aluno clica em **Progresso** e envia o código; você cola tudo em [`professor.html`](https://gitquestgame.vercel.app/professor.html) e vê o ranking, quem concluiu e a missão em que a turma mais trava, com exportação em CSV. O diploma sai em **imagem (PNG)** com um código de verificação que também aparece no painel.
 
 > **Sugestão de aula:** projete o jogo, jogue a Linha 1 com a turma e depois deixe cada aluno seguir no próprio ritmo. Quem terminar primeiro gera o diploma e ajuda os colegas.
@@ -192,7 +200,7 @@ npx serve .                # ou: python3 -m http.server 8080
 npm test
 ```
 
-Roda três suítes: a do **motor de Git** (mais de 100 verificações de comandos e mensagens) a de **missões**, que executa a solução de cada missão e confirma que todos os objetivos são atingidos, e a de **idiomas**, que garante que cada tradução tenha todas as 32 missões, textos e conquistas, e que os comandos citados nas dicas não foram alterados.
+Roda oito suítes (motor, missões, idiomas, código de progresso, troféus, missões reais, PDF e PWA). As principais: a do **motor de Git** (mais de 100 verificações de comandos e mensagens) a de **missões**, que executa a solução de cada missão e confirma que todos os objetivos são atingidos, e a de **idiomas**, que garante que cada tradução tenha todas as 32 missões, textos e conquistas, e que os comandos citados nas dicas não foram alterados.
 
 ### 🌐 Publicar no GitHub Pages
 
@@ -228,7 +236,7 @@ git-quest/
 │   ├── test-missions.js    # toda missão precisa ser completável pela solução
 │   ├── test-i18n.js        # todo idioma precisa estar completo e coerente
 │   ├── test-progress.js    # código de progresso: formato, adulteração e diploma
-│   └── e2e/                # Playwright: joga as 32 missões no navegador + painel da turma
+│   └── e2e/                # Playwright: joga as 40 missões no navegador + painel da turma
 ├── i18n/                   # este README em outros idiomas
 ├── docs/                   # capturas de tela usadas neste README
 ├── package.json

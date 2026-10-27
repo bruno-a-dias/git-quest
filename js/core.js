@@ -13,6 +13,8 @@ function track(g,ctx){
   const r=g.repo();
   if(r&&r.merging)ctx.flags.conflict=true;
   if(r&&r.stash.length>0)ctx.flags.stash=true;
+  if(r&&r.bisect&&r.bisect.found)ctx.flags.bf=r.bisect.found;
+  if(r&&r.worktrees&&Object.values(r.worktrees).some(w=>w.branch==='hotfix'))ctx.flags.wt=1;
 }
 function stepMission(g,m,ctx,cmd){
   const res=g.run(cmd);

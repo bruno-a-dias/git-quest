@@ -10,6 +10,14 @@ else{
   if(r.data.x!==225||r.data.d[3]!==125)bad('xp/missões');
   if(r.data.b.join()!=='first')bad('conquistas');
 }
+/* troféus e estatísticas viajam no código; códigos antigos continuam válidos */
+{
+  const S3=Object.assign({},S,{tro:{b_first:1,s_half:2},qf:1,chw:2,perfect:3,bestCombo:4,exp:1,t0:1700000000});
+  const r3=P.decode(P.encode(S3),40);
+  if(!r3.ok||r3.data.tr.join()!=='b_first,s_half'||r3.data.st.c!==2||r3.data.st.e!==1||r3.data.t0!==1700000000)bad('troféus no código');
+  const r4=P.decode(P.encode(S),40);
+  if(!r4.ok||r4.data.tr!==undefined||r4.data.st!==undefined)bad('campos opcionais deveriam sumir quando vazios');
+}
 /* adulterações precisam ser recusadas */
 const parts=code.split('.');
 const forged=parts[0]+'.'+parts[1].slice(0,-2)+(parts[1].slice(-2)==='AA'?'BB':'AA')+'.'+parts[2];

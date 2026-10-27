@@ -18,9 +18,9 @@
 ### Aprende Git **jugando**. Escribe comandos de verdad, conquista estaciones y llega a la nube.
 
 <p>
-  <img alt="Missions" src="https://img.shields.io/badge/misiones-32-2dd4bf?style=for-the-badge">
-  <img alt="Lines" src="https://img.shields.io/badge/l%C3%ADneas%20de%20metro-7-a78bfa?style=for-the-badge">
-  <img alt="Git commands" src="https://img.shields.io/badge/comandos%20git-30-fbbf24?style=for-the-badge">
+  <img alt="Missions" src="https://img.shields.io/badge/misiones-40-2dd4bf?style=for-the-badge">
+  <img alt="Lines" src="https://img.shields.io/badge/l%C3%ADneas%20de%20metro-9-a78bfa?style=for-the-badge">
+  <img alt="Git commands" src="https://img.shields.io/badge/comandos%20git-33-fbbf24?style=for-the-badge">
   <img alt="Languages" src="https://img.shields.io/badge/idiomas-8-f97316?style=for-the-badge">
   <img alt="Zero dependencies" src="https://img.shields.io/badge/dependencias-0-4ade80?style=for-the-badge">
   <img alt="MIT" src="https://img.shields.io/badge/licencia-MIT-38bdf8?style=for-the-badge">
@@ -59,7 +59,7 @@ Las dos direcciones sirven exactamente los mismos archivos. Si una está caída,
 
 ---
 
-## 🗺️ El mapa del juego: 7 líneas de metro
+## 🗺️ El mapa del juego: 9 líneas de metro
 
 Cada **mundo es una línea** y cada **misión es una estación** (las de rombo son quizzes). El alumno solo avanza a la siguiente estación cuando completa la actual.
 
@@ -84,7 +84,9 @@ flowchart LR
 | 🔵 **6** | Cajón y etiquetas | `git stash`, `git tag` | 3 |
 | 🟩 **7** | Rumbo a la nube | `git remote`, `push -u`, `pull`, `clone`, **jefe final** | 6 |
 
-**32 misiones en total**: 26 de comando y 6 quizzes relámpago.
+**40 misiones en total**: 33 de comando (3 en el GitHub real) y 7 quizzes relámpago.
+
+Las líneas 8 y 9 añaden **Git avanzado** (`rebase`, `bisect`, `worktree`) y **misiones en el GitHub real** (crear repositorio, fork, Pull Request, comprobados con la API pública de GitHub). Por el camino se ganan **14 trofeos estilo PlayStation** (bronce, plata, oro, platino), que aparecen en el reverso del diploma junto a las rutas. El juego también funciona **sin conexión** (PWA).
 
 ---
 
@@ -139,7 +141,7 @@ Las banderas del juego son **SVG dibujados a mano** (los emoji de bandera no se 
 
 ## 🧰 Comandos compatibles con el simulador
 
-**Git (30):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
+**Git (33):** `config` · `init` · `status` · `add` · `commit` · `log` · `show` · `diff` · `restore` · `reset` · `revert` · `rm` · `mv` · `clean` · `branch` · `switch` · `checkout` · `merge` · `cherry-pick` · `rebase` · `bisect` · `worktree` · `stash` · `tag` · `remote` · `push` · `fetch` · `pull` · `clone` · `reflog` · `ls-files` · `rev-parse` · `help`
 
 **Shell:** `ls` · `cat` · `touch` · `echo` (`>` / `>>`) · `mkdir` · `cd` · `pwd` · `rm` · `clear`
 

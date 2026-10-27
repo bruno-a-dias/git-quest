@@ -1,6 +1,7 @@
 /* Confere se todos os idiomas estão completos e coerentes com missions.js */
 const fs=require('fs'),path=require('path');
 const {MISSIONS,WORLDS,RANKS,BADGES}=require('../js/missions.js');
+const {TROPHIES}=require('../js/trophies.js');
 const D={};global.I18N={add:(c,d)=>{D[c]=d;}};
 const dir=path.join(__dirname,'..','js','lang');
 fs.readdirSync(dir).filter(f=>f.endsWith('.js')).forEach(f=>{(0,eval)(fs.readFileSync(path.join(dir,f),'utf8').replace(/^\s*I18N\.add/,'I18N.add'));});
@@ -15,6 +16,8 @@ Object.keys(D).forEach(c=>{
   if(!d.worlds||d.worlds.length!==WORLDS.length)bad(c+': worlds');
   if(!d.ranks||d.ranks.length!==RANKS.length)bad(c+': ranks');
   BADGES.forEach(b=>{if(!d.badges||!d.badges[b.id]||d.badges[b.id].length!==2)bad(c+': badge '+b.id);});
+  TROPHIES.forEach(t=>{const x=d.trophies&&d.trophies[t.id];if(!x||x.length!==2||!x[0]||!x[1])bad(c+': troféu '+t.id);});
+  if(d.trophies&&Object.keys(d.trophies).length!==TROPHIES.length)bad(c+': troféus extras');
   if(!d.missions||d.missions.length!==MISSIONS.length){bad(c+': missions length');return;}
   MISSIONS.forEach((m,i)=>{
     const x=d.missions[i];

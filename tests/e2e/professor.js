@@ -1,7 +1,7 @@
 /* Painel da turma: gera códigos de alunos fictícios e confere ranking, gargalo, CSV e códigos inválidos. */
 const http=require('http'),fs=require('fs'),path=require('path');
 const {chromium}=require('playwright');
-const {MISSIONS}=require('../../js/missions.js');
+const {MISSIONS,WORLDS}=require('../../js/missions.js');
 const P=require('../../js/progress.js');
 const ROOT=path.join(__dirname,'..','..');
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml'};
@@ -24,9 +24,9 @@ function aluno(nome,pid,ate,t){const done={},badges={};for(let i=0;i<ate;i++)don
   const page=await ctx.newPage();const errs=[];page.on('pageerror',e=>errs.push(e.message));
   await page.goto(base+'/professor.html');
   const N=MISSIONS.length;
-  const lista=[aluno('Ana <img src=x onerror=alert(1)>','a1',N),aluno('Bruno Lima','b2',12),aluno('Carla Souza','c3',12),aluno('Davi','d4',5),aluno('Eva','e5',20,Date.now()-10*864e5)];
+  const lista=[aluno('Ana <img src=x onerror=alert(1)>','a1',N),aluno('Bruno Lima','b2',14),aluno('Carla Souza','c3',14),aluno('Davi','d4',5),aluno('Eva','e5',24,Date.now()-10*864e5)];
   const velho=aluno('Bruno Lima','b2',3,1000);       /* mais antigo: deve ser ignorado */
-  const novo=aluno('Davi Alves','d4',9,Date.now()+5000); /* mais novo: atualiza a linha */
+  const novo=aluno('Davi Alves','d4',7,Date.now()+5000); /* mais novo: atualiza a linha */
   const texto='oi prof, segue:\n'+lista.slice(0,3).join('\n')+'\n\n'+lista[3]+' e '+lista[4]+'\nlixo GQ1.abc.def\n'+velho+'\n'+novo;
   await page.fill('#paste',texto);await page.click('#add');
   await page.waitForSelector('#rows tr');
@@ -34,11 +34,11 @@ function aluno(nome,pid,ate,t){const done={},badges={};for(let i=0;i<ate;i++)don
   if(rows.length!==5)bad('esperava 5 alunos, veio '+rows.length);
   if(!/^Ana <img/.test(rows[0][0]))bad('nome com HTML deveria aparecer como texto');
   if(await page.$('#rows img'))bad('HTML do nome foi interpretado (XSS)');
-  if(rows[0][3]!=='32/32'||!/^GQ-/.test(rows[0][6]))bad('aluno que concluiu deveria ter 32/32 e código de diploma: '+rows[0]);
+  if(rows[0][3]!==N+'/'+N||!/^GQ-/.test(rows[0][6]))bad('aluno que concluiu deveria ter todas as missões e código de diploma: '+rows[0]);
   const davi=rows.find(r=>r[0].startsWith('Davi'));
-  if(!davi||davi[0]!=='Davi Alves'||davi[3]!=='9/32')bad('atualização do Davi falhou: '+davi);
+  if(!davi||davi[0]!=='Davi Alves'||davi[3]!=='7/'+N)bad('atualização do Davi falhou: '+davi);
   const bruno=rows.find(r=>r[0]==='Bruno Lima');
-  if(!bruno||bruno[3]!=='12/32')bad('código antigo sobrescreveu o novo: '+bruno);
+  if(!bruno||bruno[3]!=='14/'+N)bad('código antigo sobrescreveu o novo: '+bruno);
   const msg=await page.textContent('#msg');
   if(!/1 inválido/.test(msg)||!/1 ignorado/.test(msg))bad('mensagem de resumo: '+msg);
   if((await page.$$('#bad li')).length!==1)bad('lista de inválidos');
@@ -71,12 +71,13 @@ function aluno(nome,pid,ate,t){const done={},badges={};for(let i=0;i<ate;i++)don
   await page.click('#chart .bar:nth-child(15)');
   const who=await page.textContent('#who');
   if(!/Ainda não fizeram:.*Davi Alves/.test(who)||/Ainda não fizeram:.*Eva/.test(who))bad('painel "quem falta": '+who);
-  if((await page.$$('#axis span')).length!==7)bad('eixo com 7 linhas');
+  if((await page.$$('#axis span')).length!==WORLDS.length)bad('eixo com '+WORLDS.length+' linhas');
   /* detalhe do aluno */
   await page.click('#rows tr:has-text("Eva")');
   await page.waitForSelector('#stu:not([hidden])');
-  if((await page.$$('#strip .cell.ok')).length!==20)bad('faixa de missões da Eva');
-  if(!/missão 21/.test(await page.textContent('#strip-note')))bad('nota da faixa: '+await page.textContent('#strip-note'));
+  if((await page.$$('#strip .cell.ok')).length!==24)bad('faixa de missões da Eva');
+  if(!/missão 25/.test(await page.textContent('#strip-note')))bad('nota da faixa: '+await page.textContent('#strip-note'));
+  if(!/Troféus\s*0\/14/.test(await page.textContent('#stugrid')))bad('painel deveria mostrar troféus: '+await page.textContent('#stugrid'));
   await page.keyboard.press('Escape');
   if(!(await page.$('#stu[hidden]')))bad('Esc deveria fechar o detalhe');
   /* resumo para WhatsApp */

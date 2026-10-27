@@ -16,6 +16,14 @@ function printLines(out){
   });
   tb.scrollTop=tb.scrollHeight;
 }
+let bannerEls=[],bannerIdx=-1;
+/* o aviso do topo do terminal acompanha o idioma escolhido */
+function fillBanner(){
+  if(!M||!bannerEls[0]||MISSIONS[bannerIdx]!==M)return;
+  const set=(d,t)=>{const sp=d.querySelector('span');if(sp)sp.textContent=t;};
+  set(bannerEls[0],I18N.t('banner_mission',bannerIdx+1,MISSIONS.length,LM().title));
+  set(bannerEls[1],I18N.t(M.type==='quiz'?'banner_quiz':'banner_help'));
+}
 function printText(txt,cls){printLines([[[cls||'',txt]]]);}
 function promptParts(){
   const v=g.view();return {path:v.cwd,br:v.inRepo?' ('+v.branch+')':''};
@@ -104,6 +112,7 @@ function renderMission(){
     const hb=el('div','hintbox');hb.id='hintbox';box.appendChild(hb);
   }
   const win=el('div');win.id='win';box.appendChild(win);
+  if(GQ.hookRender)GQ.hookRender();
 }
 function updateGoals(states){
   const lis=document.querySelectorAll('#goals li');
@@ -148,13 +157,16 @@ function renderWin(){
 function complete(){
   const S=GQ.S(),idx=MISSIONS.indexOf(M);ctx.done=true;
   const before=GQ.rankOf(S.xp);let gain=0;const first=!S.done[idx];
+  const chWon=GQ.chWin?GQ.chWin(idx):false;
   if(first){
     if(M.type==='quiz')gain=[50,25,10][Math.min(quizTries,3)-1]||10;
     else gain=Math.max(20,100-Math.min(3,ctx.hintsUsed)*25)+((ctx.errors===0&&ctx.hintsUsed===0)?25:0);
+    if(chWon)gain+=50;
     S.xp+=gain;S.done[idx]={xp:gain};
     if(M.type!=='quiz'){S.worldHints[M.w]=(S.worldHints[M.w]||0)+ctx.hintsUsed;S.combo=ctx.hintsUsed===0?S.combo+1:0;}
     if(M.noIdentity){const c=g.state().cfg;S.id={name:c['user.name']||S.id.name,email:c['user.email']||S.id.email};}
   }
+  if(chWon)S.chw=(S.chw|0)+1;
   GQ.save();GQ.renderHud();GQ.renderMetro();GQ.sfx('win');GQ.confetti();
   winInfo={gain,isFirst:first,bonus:first&&ctx.errors===0&&ctx.hintsUsed===0};renderWin(true);
   if(M.type!=='quiz'){const gb=document.querySelectorAll('#goals li');gb.forEach(li=>li.classList.add('ok'));}
@@ -166,21 +178,23 @@ function complete(){
     if(after>before){GQ.toast(I18N.t('levelup_t'),I18N.t('levelup_s',GQ.RK[after].name));GQ.sfx('level');}
     if(MISSIONS.every((m,i)=>S.done[i]))setTimeout(openDiploma,1400);
   }
+  if(GQ.afterComplete)GQ.afterComplete({idx,first,type:M.type,quiz:M.type==='quiz',tries:quizTries,errors:ctx.errors,hints:ctx.hintsUsed,chWon,gain});
   setTimeout(()=>{const w=$('win');if(w)w.scrollIntoView({behavior:'smooth',block:'nearest'});},120);
 }
 
+GQ.cur=()=>M;GQ.ctx=()=>ctx;
+GQ.recheck=function(){if(!M||!ctx||ctx.done)return;const st=goalStates(g,M,ctx);updateGoals(st);if(st.length&&st.every(Boolean))complete();};
 GQ.go=function(i,restart){
   const S=GQ.S();if(i<0||i>=MISSIONS.length)return;
   if(!GQ.unlocked(i))return;
-  M=MISSIONS[i];S.cur=i;GQ.save();quizTries=0;hintsShown=0;winInfo=null;qstate={wrong:[],right:-1};
+  M=MISSIONS[i];S.cur=i;GQ.save();if(GQ.hookGo)GQ.hookGo(i);quizTries=0;hintsShown=0;winInfo=null;qstate={wrong:[],right:-1};
   const pm=M.type==='quiz'?{setup:BASE}:M;
   ctx=startMission(g,pm,S.id);
   if(M.type==='quiz')ctx.hist=[];
   if(S.done[i]&&!restart){/* revisão: segue o jogo normal sem XP */}
   renderMission();tb.textContent='';
-  printText(I18N.t('banner_mission',i+1,MISSIONS.length,LM().title),'d');
-  printText(I18N.t(M.type==='quiz'?'banner_quiz':'banner_help'),'d');
-  printText('','');
+  printText('','d');printText('','d');printText('','');
+  const bl=tb.children;bannerEls=[bl[bl.length-3],bl[bl.length-2]];bannerIdx=i;fillBanner();
   refresh();GQ.renderMetro();GQ.renderHud();
   if(matchMedia('(pointer:fine)').matches)inp.focus();
 };
@@ -208,8 +222,8 @@ $('btnReset').addEventListener('click',()=>{
   if(!rt){b.textContent=I18N.t('reset_confirm');b.classList.add('warn');rt=setTimeout(()=>{rt=0;b.textContent=I18N.t('reset');b.classList.remove('warn');},4500);return;}
   clearTimeout(rt);rt=0;b.textContent=I18N.t('reset');b.classList.remove('warn');
   try{localStorage.removeItem('gitquest.v1');}catch(e){}
-  GQ.setS({xp:0,done:{},cur:0,id:{name:DEFAULT_ID.name,email:DEFAULT_ID.email},badges:{},combo:0,player:'',worldHints:{},sound:false,lang:GQ.S().lang});
-  soundLabel();GQ.renderBadges();GQ.go(0,true);
+  GQ.setS({xp:0,done:{},cur:0,id:{name:DEFAULT_ID.name,email:DEFAULT_ID.email},badges:{},combo:0,player:'',worldHints:{},sound:false,lang:GQ.S().lang,tro:{},rev:{},qf:0,chw:0,perfect:0,bestCombo:0,exp:0,t0:0});
+  soundLabel();GQ.renderBadges();if(GQ.renderExtraBtns)GQ.renderExtraBtns();GQ.go(0,true);
 });
 
 /* ---------- início ---------- */
@@ -229,7 +243,7 @@ function relang(){
   const rb=$('btnReset');if(rt){clearTimeout(rt);rt=0;rb.classList.remove('warn');}
   soundLabel();GQ.renderHud();GQ.renderMetro();GQ.renderBadges();GQ.renderAreas(g.view());GQ.renderGraph(g.view());setPrompt();
   if(!M)return;
-  renderMission();
+  renderMission();fillBanner();
   if(M.type==='quiz'){
     const opts=[...document.querySelectorAll('#opts .opt')];
     qstate.wrong.forEach(i=>{if(opts[i]){opts[i].classList.add('wrong');opts[i].disabled=true;}});

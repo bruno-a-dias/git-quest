@@ -1,4 +1,4 @@
-/* Teste de ponta a ponta: abre o jogo num Chromium de verdade e joga as 32 missões
+/* Teste de ponta a ponta: abre o jogo num Chromium de verdade e joga todas as missões
    pela interface (digitando os comandos e clicando nos quizzes), em cada idioma pedido.
    Também confere: código de progresso, importação e diploma em PNG.
    Uso: node tests/e2e/play-all.js            (pt e hi)
@@ -23,6 +23,14 @@ async function newPage(browser,base,lang,errors){
   const ctx=await browser.newContext({viewport:{width:1280,height:900},acceptDownloads:true,locale:'en-US'});
   /* bloqueia fontes externas: o teste não depende de rede */
   await ctx.route(/fonts\.(googleapis|gstatic)\.com/,r=>r.abort());
+  /* GitHub simulado para as missões de verdade */
+  await ctx.route('https://api.github.com/**',r=>{
+    const u=new URL(r.request().url()).pathname,json=o=>r.fulfill({status:200,contentType:'application/json',body:JSON.stringify(o)});
+    if(/^\/repos\/ana\/pizzaria$/.test(u))return json({fork:false,private:false});
+    if(/^\/repos\/ana\/git-quest$/.test(u))return json({fork:true});
+    if(/\/pulls\/1$/.test(u))return json({state:'open'});
+    return r.fulfill({status:404,contentType:'application/json',body:'{}'});
+  });
   const page=await ctx.newPage();
   page.on('pageerror',e=>errors.push('pageerror: '+e.message));
   page.on('console',m=>{if(m.type()==='error'&&!/fonts\.|ERR_FAILED/.test(m.text()))errors.push('console: '+m.text());});
@@ -40,6 +48,11 @@ async function playAll(page,lang){
     if(m.type==='quiz'){
       await page.waitForSelector('#opts .opt');
       await page.locator('#opts .opt').nth(m.answer).click();
+    }else if(m.type==='real'){
+      await page.waitForSelector('.realbox');
+      if(m.kind==='pr')await page.fill('.realin','https://github.com/bruno-a-dias/git-quest/pull/1');
+      else{const ins=page.locator('.realin');await ins.nth(0).fill('ana');await ins.nth(1).fill(m.kind==='fork'?'git-quest':'pizzaria');}
+      await page.click('.realbox .btn.pri');
     }else{
       await page.waitForSelector('#goals li');
       for(const cmd of m.solution){
@@ -73,6 +86,9 @@ async function playAll(page,lang){
       if(done!==MISSIONS.length)bad(`[${lang}] concluídas: ${done}/${MISSIONS.length}`);
       const exp=MISSIONS.length&&S.xp;
       if(!(exp>0))bad(`[${lang}] XP zerado`);
+      /* troféus: tudo menos relógio e exportação */
+      const tro=Object.keys(S.tro||{});
+      if(tro.length<11||!tro.includes('g_adv')||!tro.includes('g_real'))bad(`[${lang}] troféus: ${tro.join(',')}`);
       /* diploma abre sozinho ao terminar */
       await page.waitForSelector('#diploma:not([hidden])',{timeout:5000}).catch(()=>bad(`[${lang}] diploma não abriu`));
       /* código de verificação e PNG */
@@ -84,10 +100,25 @@ async function playAll(page,lang){
       const buf=fs.readFileSync(file);
       if(buf.length<20000||buf.readUInt32BE(16)!==1754||buf.readUInt32BE(20)!==1240)bad(`[${lang}] PNG do diploma inesperado (${buf.length} bytes)`);
       if(process.env.KEEP_PNG)fs.copyFileSync(file,path.join(process.env.KEEP_PNG,'diploma-'+lang+'.png'));
+      /* verso (trilhas + troféus) e PDF com frente e verso */
+      await page.click('#certflip');await page.waitForSelector('#certbackbox:not([hidden])',{timeout:8000}).catch(()=>bad(`[${lang}] verso não abriu`));
+      const [db]=await Promise.all([page.waitForEvent('download',{timeout:10000}),page.click('#certbackpng')]);
+      const fb=path.join(require('os').tmpdir(),'gq-verso-'+lang+'.png');await db.saveAs(fb);
+      const bb=fs.readFileSync(fb);
+      if(bb.length<20000||bb.readUInt32BE(16)!==1754||bb.readUInt32BE(20)!==1240)bad(`[${lang}] PNG do verso inesperado`);
+      if(process.env.KEEP_PNG)fs.copyFileSync(fb,path.join(process.env.KEEP_PNG,'verso-'+lang+'.png'));
+      const [dpdf]=await Promise.all([page.waitForEvent('download',{timeout:15000}),page.click('#certpdf2')]);
+      const fp=path.join(require('os').tmpdir(),'gq-diploma-'+lang+'.pdf');await dpdf.saveAs(fp);
+      const pb=fs.readFileSync(fp);
+      if(pb.slice(0,5).toString()!=='%PDF-'||(pb.toString('latin1').match(/\/Type \/Page /g)||[]).length!==2)bad(`[${lang}] PDF inválido`);
+      await page.click('#certunflip');
       /* exportar */
       await page.click('#certclose');await page.click('#btnProgress');
       progressCode=await page.inputValue('#progcode');
       if(!/^GQ1\./.test(progressCode))bad(`[${lang}] código de progresso inválido`);
+      await page.click('#progcopy');
+      const S1=await page.evaluate(()=>GQ.S());
+      if(!S1.exp||!(S1.tro||{}).b_save)bad(`[${lang}] troféu de exportação não veio`);
       /* importar em navegador novo: precisa reproduzir XP e missões */
       const second=await newPage(browser,base,lang,errors);
       await second.page.click('#btnProgress');
@@ -95,6 +126,7 @@ async function playAll(page,lang){
       await second.page.waitForSelector('#progmsg.ok',{timeout:5000}).catch(()=>bad(`[${lang}] importação não confirmou`));
       const S2=await second.page.evaluate(()=>GQ.S());
       if(S2.xp!==S.xp||Object.keys(S2.done).length!==done)bad(`[${lang}] importação divergiu: xp ${S2.xp}/${S.xp}`);
+      if(Object.keys(S2.tro||{}).length<11)bad(`[${lang}] troféus não vieram na importação`);
       /* código adulterado é recusado */
       await second.page.fill('#progin',progressCode.slice(0,-2)+'zz');await second.page.click('#progload');
       await second.page.waitForSelector('#progmsg.err',{timeout:3000}).catch(()=>bad(`[${lang}] código adulterado foi aceito`));
