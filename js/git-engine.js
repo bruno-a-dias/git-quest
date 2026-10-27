@@ -1,5 +1,28 @@
 /* ===== Motor de Git simulado (parte A: núcleo) ===== */
 function createGit(){
+  /* mensagens do simulador em português; GQ_X (opcional, definido por i18n.js) pode traduzi-las */
+  const XD={
+    noeditor:()=>'hint: neste simulador não existe editor de texto. Use:  git commit -m "sua mensagem"',
+    revconf:()=>'hint: este simulador não resolve conflitos de revert.',
+    cpconf:()=>'hint: este simulador não resolve conflitos de cherry-pick.',
+    tagmsg:n=>'hint: neste simulador use  git tag -a '+n+' -m "mensagem"',
+    clonehome:()=>'fatal: neste simulador o clone só funciona a partir da pasta inicial (use: cd ..)',
+    help1:()=>'Comandos que este simulador entende:',
+    helpterm:()=>'Comandos de terminal: ls cat touch echo mkdir cd pwd rm clear',
+    helptip:()=>'Dica: use as setas ↑ ↓ para repetir comandos e Tab para completar.',
+    helphint:()=>"digite 'help' para ver os comandos deste simulador",
+    catname:()=>'cat: faltou o nome do arquivo',
+    touchname:()=>'touch: faltou o nome do arquivo',
+    redir:o=>'bash: erro de sintaxe: faltou o nome do arquivo depois de '+o,
+    mkdirname:()=>'mkdir: faltou o nome da pasta',
+    mkdirhome:()=>'mkdir: neste simulador, crie pastas apenas na pasta inicial (~).',
+    mkdirexists:n=>"mkdir: não foi possível criar '"+n+"': O arquivo já existe",
+    rmname:()=>'rm: faltou o nome do arquivo',
+    rmmissing:n=>"rm: não foi possível remover '"+n+"': Arquivo ou diretório inexistente",
+    notfound:c=>c+': comando não encontrado',
+    forgot:()=>'. Faltou escrever "git" antes?'
+  };
+  const X=(k,...a)=>{const f=(typeof globalThis!=='undefined')&&globalThis.GQ_X;const o=f?f(k,...a):null;return (typeof o==='string'&&o)?o:XD[k](...a);};
   const G={cfg:{'init.defaultBranch':'main'},folders:{'~':{wd:{},repo:null}},cwd:'~'};
   let OUT=[];
   const P=(t,c)=>OUT.push([[c||'',String(t)]]);
@@ -300,7 +323,7 @@ function createGit(){
       P(statText(statOf(treeOf(r,old.parents[0]),r.index)));modeLines(treeOf(r,old.parents[0]),r.index);return;
     }
     if(!msg&&r.merging)msg="Merge branch '"+r.merging.name+"'";
-    if(!msg){P('Aborting commit due to empty commit message.','r');P('hint: neste simulador não existe editor de texto. Use:  git commit -m "sua mensagem"','y');return;}
+    if(!msg){P('Aborting commit due to empty commit message.','r');P(X('noeditor'),'y');return;}
     const parents=head?[head]:[];if(r.merging)parents.push(r.merging.theirs);
     const ns=mkCommit(r,msg,parents,r.index);
     moveHead(r,ns,(!head?'commit (initial): ':r.merging?'commit (merge): ':'commit: ')+msg.split('\n')[0]);
@@ -467,7 +490,7 @@ function createGit(){
       if(c.tree[f]===pt[f])continue;
       if(head[f]===c.tree[f]){if(pt[f]===undefined)delete nt[f];else nt[f]=pt[f];}else bad=true;
     }
-    if(bad){P('error: could not revert '+s7(sha)+'... '+c.msg.split('\n')[0],'r');P('hint: este simulador não resolve conflitos de revert.','y');return;}
+    if(bad){P('error: could not revert '+s7(sha)+'... '+c.msg.split('\n')[0],'r');P(X('revconf'),'y');return;}
     const msg='Revert "'+c.msg.split('\n')[0]+'"';
     const ns=mkCommit(r,msg+'\n\nThis reverts commit '+sha+'.',[headSha(r)],nt);
     moveHead(r,ns,'revert: '+msg);applyTree(r,nt);
@@ -713,7 +736,7 @@ function createGit(){
         if(head[f]===pt[f]){if(c.tree[f]===undefined)delete nt[f];else nt[f]=c.tree[f];}
         else if(head[f]!==c.tree[f])bad=true;
       }
-      if(bad){P('error: could not apply '+s7(sha)+'... '+c.msg.split('\n')[0],'r');P('hint: este simulador não resolve conflitos de cherry-pick.','y');return;}
+      if(bad){P('error: could not apply '+s7(sha)+'... '+c.msg.split('\n')[0],'r');P(X('cpconf'),'y');return;}
       const ns=mkCommit(r,c.msg,[headSha(r)],nt,undefined);
       moveHead(r,ns,'cherry-pick: '+c.msg.split('\n')[0]);applyTree(r,nt);
       P('['+brLabel(r)+' '+s7(ns)+'] '+c.msg.split('\n')[0]);P(statText(statOf(head,nt)));modeLines(head,nt);
@@ -778,7 +801,7 @@ function createGit(){
     if(r.tags[name]){P("fatal: tag '"+name+"' already exists",'r');return;}
     const sha=pos[1]?resolve(r,pos[1]):headSha(r);
     if(!sha){P("fatal: Failed to resolve '"+pos[1]+"' as a valid ref.",'r');return;}
-    if(ann&&!msg){P('fatal: no tag message?','r');P('hint: neste simulador use  git tag -a '+name+' -m "mensagem"','y');return;}
+    if(ann&&!msg){P('fatal: no tag message?','r');P(X('tagmsg',name),'y');return;}
     r.tags[name]={sha,annotated:ann,msg};
   };
   GIT.remote=a=>{
@@ -908,7 +931,7 @@ function createGit(){
     if(!/^(https?:\/\/|git@|ssh:\/\/|\.{0,2}\/)/.test(url)){P("fatal: repository '"+url+"' does not exist",'r');return;}
     const name=pos[1]||url.replace(/\/+$/,'').split(/[\/:]/).pop().replace(/\.git$/,'');
     if(!name){P('fatal: could not determine the destination folder','r');return;}
-    if(G.cwd!=='~'){P('fatal: neste simulador o clone só funciona a partir da pasta inicial (use: cd ..)','r');return;}
+    if(G.cwd!=='~'){P(X('clonehome'),'r');return;}
     const ex=G.folders[name];
     if(ex&&(ex.repo||Object.keys(ex.wd).length)){P("fatal: destination path '"+name+"' already exists and is not an empty directory.",'r');return;}
     const target=br||'main';
@@ -932,11 +955,11 @@ function createGit(){
     r.reflog.forEach((e,i)=>PS(['y',s7(e.sha)+' '],['c','HEAD@{'+i+'}: '],['',e.msg]));
   };
   GIT.help=()=>{
-    P('Comandos que este simulador entende:','b');
+    P(X('help1'),'b');
     P('  config init status add commit log show diff restore reset revert rm mv clean');
     P('  branch switch checkout merge cherry-pick stash tag remote push fetch pull clone reflog');
-    P('Comandos de terminal: ls cat touch echo mkdir cd pwd rm clear','d');
-    P('Dica: use as setas ↑ ↓ para repetir comandos e Tab para completar.','d');
+    P(X('helpterm'),'d');
+    P(X('helptip'),'d');
   };
 
   /* ---------- terminal (shell) ---------- */
@@ -949,23 +972,23 @@ function createGit(){
     names.sort();if(names.length)P(names.join('  '));
   };
   SH.cat=t=>{
-    const f=t[1]&&t[1].v;if(!f){P('cat: faltou o nome do arquivo','r');return;}
+    const f=t[1]&&t[1].v;if(!f){P(X('catname'),'r');return;}
     const v=W()[f];if(v===undefined){P('cat: '+f+': No such file or directory','r');return;}
     if(v!=='')v.split('\n').forEach(l=>P(l));
   };
-  SH.touch=t=>{if(t.length<2){P('touch: faltou o nome do arquivo','r');return;}t.slice(1).forEach(x=>{if(W()[x.v]===undefined)W()[x.v]='';});};
+  SH.touch=t=>{if(t.length<2){P(X('touchname'),'r');return;}t.slice(1).forEach(x=>{if(W()[x.v]===undefined)W()[x.v]='';});};
   SH.echo=t=>{
     const i=t.findIndex(x=>x.op);const words=(i<0?t.slice(1):t.slice(1,i)).map(x=>x.v).join(' ');
     if(i<0){P(words);return;}
-    const file=t[i+1]&&t[i+1].v;if(!file){P('bash: erro de sintaxe: faltou o nome do arquivo depois de '+t[i].v,'r');return;}
+    const file=t[i+1]&&t[i+1].v;if(!file){P(X('redir',t[i].v),'r');return;}
     const wd=W();
     if(t[i].v==='>')wd[file]=words;
     else wd[file]=(wd[file]===undefined||wd[file]==='')?words:wd[file]+'\n'+words;
   };
   SH.mkdir=t=>{
-    const n=t[1]&&t[1].v;if(!n){P('mkdir: faltou o nome da pasta','r');return;}
-    if(G.cwd!=='~'){P('mkdir: neste simulador, crie pastas apenas na pasta inicial (~).','y');return;}
-    if(G.folders[n]){P("mkdir: não foi possível criar '"+n+"': O arquivo já existe",'r');return;}
+    const n=t[1]&&t[1].v;if(!n){P(X('mkdirname'),'r');return;}
+    if(G.cwd!=='~'){P(X('mkdirhome'),'y');return;}
+    if(G.folders[n]){P(X('mkdirexists',n),'r');return;}
     G.folders[n]={wd:{},repo:null};
   };
   SH.cd=t=>{
@@ -978,21 +1001,21 @@ function createGit(){
   SH.pwd=()=>P('/home/aluno'+(G.cwd==='~'?'':'/'+G.cwd));
   SH.rm=t=>{
     const fs=t.slice(1).filter(x=>!x.v.startsWith('-'));
-    if(!fs.length){P('rm: faltou o nome do arquivo','r');return;}
-    fs.forEach(x=>{if(W()[x.v]===undefined)P("rm: não foi possível remover '"+x.v+"': Arquivo ou diretório inexistente",'r');else delete W()[x.v];});
+    if(!fs.length){P(X('rmname'),'r');return;}
+    fs.forEach(x=>{if(W()[x.v]===undefined)P(X('rmmissing',x.v),'r');else delete W()[x.v];});
   };
   SH.clear=()=>{};
 
   /* ---------- despacho ---------- */
   const GIT_NAMES=['config','init','status','add','commit','log','show','diff','restore','reset','revert','rm','mv','clean','branch','switch','checkout','merge','cherry-pick','stash','tag','remote','push','fetch','pull','clone','reflog','ls-files','rev-parse','help'];
   function run(line){
-    OUT=[];line=line.trim();
+    OUT=[];line=line.trim();let NF=false;
     if(!line)return {out:OUT,err:false};
     const toks=tokenize(line),args=toks.map(t=>t.v),cmd=args[0];
     if(cmd==='clear')return {out:[],clear:true,err:false};
     if(cmd==='git'){
       let sub=args[1];
-      if(!sub){P('usage: git [--version] [--help] <command> [<args>]','y');P("digite 'help' para ver os comandos deste simulador",'d');}
+      if(!sub){P('usage: git [--version] [--help] <command> [<args>]','y');P(X('helphint'),'d');}
       else{
         if(G.cfg['alias.'+sub]){args.splice(1,1,...G.cfg['alias.'+sub].split(/\s+/));sub=args[1];}
         if(sub==='--version'||sub==='version')P('git version 2.45.1');
@@ -1008,9 +1031,9 @@ function createGit(){
       }
     }else if(cmd==='help'){GIT.help();}
     else if(SH[cmd])SH[cmd](toks);
-    else P(cmd+': comando não encontrado'+(/^(add|commit|status|init|push|pull|clone|branch|merge|log)$/.test(cmd)?'. Faltou escrever "git" antes?':''),'r');
-    const err=OUT.some(l=>/^(fatal:|error:|git: '|.*: comando não encontrado|cd: |cat: |rm: |mkdir: |touch: |bash: )/.test(l[0][1])||/^(fatal|error)/.test(l[0][1]));
-    return {out:OUT,err};
+    else{NF=true;P(X('notfound',cmd)+(/^(add|commit|status|init|push|pull|clone|branch|merge|log)$/.test(cmd)?X('forgot'):''),'r');}
+    const err=OUT.some(l=>/^(fatal:|error:|git: '|cd: |cat: |rm: |mkdir: |touch: |bash: )/.test(l[0][1])||/^(fatal|error)/.test(l[0][1]));
+    return {out:OUT,err:err||NF};
   }
 
   /* ---------- visão para a interface ---------- */

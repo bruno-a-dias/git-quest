@@ -6,27 +6,27 @@ const SAVE='gitquest.v1';
 const PROF=location.hash==='#professor';
 const g=createGit();
 window.GQ={g,$,el};
-let S={xp:0,done:{},cur:0,id:{name:DEFAULT_ID.name,email:DEFAULT_ID.email},badges:{},combo:0,player:'',worldHints:{},sound:false};
+let S={xp:0,done:{},cur:0,id:{name:DEFAULT_ID.name,email:DEFAULT_ID.email},badges:{},combo:0,player:'',worldHints:{},sound:false,lang:''};
 function load(){try{const j=JSON.parse(localStorage.getItem(SAVE)||'null');if(j&&typeof j==='object')S=Object.assign(S,j);}catch(e){}}
 function save(){try{localStorage.setItem(SAVE,JSON.stringify(S));}catch(e){}}
 GQ.S=()=>S;GQ.save=save;GQ.load=load;GQ.setS=o=>{S=o;};GQ.PROF=PROF;
 
 /* ---------- ranks e XP ---------- */
 const TOTAL=MISSIONS.reduce((a,m)=>a+(m.type==='quiz'?50:100),0);
-const RK=[0,.08,.25,.45,.7,.92].map((f,i)=>({at:Math.round(f*TOTAL),name:RANKS[i][1]}));
+const RK=[0,.08,.25,.45,.7,.92].map((f,i)=>({at:Math.round(f*TOTAL),get name(){return I18N.rank(i);}}));
 GQ.TOTAL=TOTAL;
 function rankOf(xp){let r=0;RK.forEach((k,i)=>{if(xp>=k.at)r=i;});return r;}
 GQ.rankOf=rankOf;GQ.RK=RK;
 function renderHud(){
   const r=rankOf(S.xp),cur=RK[r],nx=RK[r+1];
   $('rank').textContent='';
-  const sp=el('span',null,'Nível '+(r+1)+' · ');$('rank').appendChild(sp);$('rank').appendChild(document.createTextNode(cur.name));
+  const sp=el('span',null,I18N.t('level',r+1));$('rank').appendChild(sp);$('rank').appendChild(document.createTextNode(cur.name));
   $('xpnow').textContent=S.xp+' XP';
-  $('xpnext').textContent=nx?'próximo nível: '+nx.at+' XP':'nível máximo';
+  $('xpnext').textContent=nx?I18N.t('next_level',nx.at):I18N.t('max_level');
   const pct=nx?Math.max(3,Math.min(100,(S.xp-cur.at)/(nx.at-cur.at)*100)):100;
   $('xpfill').style.width=pct+'%';
   $('xpbar').setAttribute('aria-valuenow',String(Math.round(pct)));
-  const cb=$('combo');if(S.combo>=2){cb.hidden=false;cb.textContent='combo x'+S.combo;}else cb.hidden=true;
+  const cb=$('combo');if(S.combo>=2){cb.hidden=false;cb.textContent=I18N.t('combo',S.combo);}else cb.hidden=true;
   const all=MISSIONS.every((m,i)=>S.done[i]);$('btnDiploma').hidden=!all;
 }
 GQ.renderHud=renderHud;
@@ -39,12 +39,12 @@ function renderMetro(){
   const box=$('metro');box.textContent='';
   WORLDS.forEach((w,wi)=>{
     const row=el('div','world');row.style.setProperty('--wc',w.c);
-    const nm=el('div','wname');nm.appendChild(el('b',null,'Linha '+w.n));nm.appendChild(document.createTextNode(w.t));row.appendChild(nm);
+    const nm=el('div','wname');nm.appendChild(el('b',null,I18N.t('line',w.n)));nm.appendChild(document.createTextNode(I18N.world(wi)));row.appendChild(nm);
     const st=el('div','stations');
     MISSIONS.forEach((m,i)=>{
       if(m.w!==wi)return;
       const b=el('button','st'+(m.type==='quiz'?' quiz':'')+(S.done[i]?' done':'')+(i===S.cur?' cur':'')+(unlocked(i)?'':' lock'));
-      b.title=(m.type==='quiz'?'Quiz: ':'')+m.title+(unlocked(i)?'':' (bloqueada)');
+      b.title=(m.type==='quiz'?I18N.t('quiz_pre'):'')+I18N.m(i).title+(unlocked(i)?'':I18N.t('locked'));
       b.setAttribute('aria-label',b.title);
       if(!unlocked(i))b.disabled=true;
       b.addEventListener('click',()=>GQ.go(i));
@@ -59,14 +59,14 @@ GQ.renderMetro=renderMetro;
 function renderBadges(){
   const b=$('badges');b.textContent='';
   BADGES.forEach(x=>{
-    const d=el('div','badge'+(S.badges[x.id]?' on':''));d.appendChild(el('b',null,x.t));d.appendChild(document.createTextNode(S.badges[x.id]?x.d:'???'));
+    const d=el('div','badge'+(S.badges[x.id]?' on':''));const lb=I18N.badge(x);d.appendChild(el('b',null,lb.t));d.appendChild(document.createTextNode(S.badges[x.id]?lb.d:'???'));
     b.appendChild(d);
   });
 }
 GQ.renderBadges=renderBadges;
 GQ.award=id=>{
   if(S.badges[id])return;S.badges[id]=true;save();renderBadges();
-  const b=BADGES.find(x=>x.id===id);if(b){toast('Conquista: '+b.t,b.d);GQ.sfx('level');}
+  const b=BADGES.find(x=>x.id===id);if(b){const lb=I18N.badge(b);toast(I18N.t('badge_toast',lb.t),lb.d);GQ.sfx('level');}
 };
 function toast(t,s){
   const d=el('div','toast');d.appendChild(el('b',null,t));d.appendChild(el('span',null,s||''));
@@ -88,23 +88,23 @@ function area(title,sub,zone,items,emptyTxt){
   const box=el('div','chips');const keys=new Set();
   if(!items.length)box.appendChild(el('div','empty',emptyTxt));
   items.slice(0,9).forEach(it=>{const r=chip(zone,it.n,it.cls,it.small);keys.add(r.key);box.appendChild(r.c);});
-  if(items.length>9)box.appendChild(el('div','empty','+ '+(items.length-9)+' arquivos'));
+  if(items.length>9)box.appendChild(el('div','empty',I18N.t('a_more',items.length-9)));
   prevZ[zone]=keys;a.appendChild(box);return a;
 }
-const SLBL={untracked:'novo',modified:'editado',conflict:'conflito',ignored:'ignorado',clean:'',plain:'',new:'novo',mod:'editado',del:'removido'};
+const SLBL=()=>({untracked:I18N.t('lbl_new'),modified:I18N.t('lbl_mod'),conflict:I18N.t('lbl_conf'),ignored:I18N.t('lbl_ign'),clean:'',plain:'',new:I18N.t('lbl_new'),mod:I18N.t('lbl_mod'),del:I18N.t('lbl_del')});
 function renderAreas(v){
-  const box=$('areas');box.textContent='';
-  const wd=v.wd.map(f=>({n:f.n,cls:f.s==='plain'?'clean':f.s,small:SLBL[f.s]}));
-  box.appendChild(area('Pasta de trabalho',v.inRepo?'':'',"wd",wd,'vazia: crie arquivos com echo ou touch'));
+  const box=$('areas');box.textContent='';const L=SLBL(),T=I18N.t;
+  const wd=v.wd.map(f=>({n:f.n,cls:f.s==='plain'?'clean':f.s,small:L[f.s]}));
+  box.appendChild(area(T('a_wd'),'',"wd",wd,T('a_wd_empty')));
   if(!v.inRepo){
-    box.appendChild(area('Staging','','st',[],'sem repositório'));
-    box.appendChild(area('Repositório local','','repo',[],'rode git init'));
-    box.appendChild(area('Remoto','','rem',[],'sem remoto'));return;
+    box.appendChild(area(T('a_st'),'','st',[],T('a_norepo')));
+    box.appendChild(area(T('a_repo'),'','repo',[],T('a_repo_none')));
+    box.appendChild(area(T('a_rem'),'','rem',[],T('a_rem_none')));return;
   }
-  box.appendChild(area('Staging','','st',v.staged.map(f=>({n:f.n,cls:f.s,small:SLBL[f.s]})),'nada preparado'));
-  box.appendChild(area('Repositório local',v.branch+' · '+v.commits+(v.commits===1?' commit':' commits'),'repo',v.repoFiles.map(f=>({n:f.n,cls:'clean',small:''})),'nenhum commit ainda'));
+  box.appendChild(area(T('a_st'),'','st',v.staged.map(f=>({n:f.n,cls:f.s,small:L[f.s]})),T('a_st_empty')));
+  box.appendChild(area(T('a_repo'),T(v.commits===1?'a_commit1':'a_commitN',v.branch,v.commits),'repo',v.repoFiles.map(f=>({n:f.n,cls:'clean',small:''})),T('a_repo_empty')));
   const rm=v.remote?v.remote.branches.map(b=>({n:b.b,cls:'rem',small:b.sha})):[];
-  box.appendChild(area('Remoto',v.remote?v.remote.name:'','rem',rm,v.remote?'nada enviado ainda':'sem remoto: git remote add'));
+  box.appendChild(area(T('a_rem'),v.remote?v.remote.name:'','rem',rm,v.remote?T('a_rem_nopush'):T('a_rem_add')));
 }
 GQ.renderAreas=renderAreas;
 
@@ -116,7 +116,7 @@ let seenNodes=new Set();
 function renderGraph(v){
   const box=$('graph');box.textContent='';
   if(!v.inRepo||!v.graph||!v.graph.nodes.length){
-    box.appendChild(el('div','gempty',v.inRepo?'Ainda não há commits. O primeiro aparece aqui.':'Sem repositório. Rode git init para começar o mapa.'));
+    box.appendChild(el('div','gempty',v.inRepo?I18N.t('g_empty_repo'):I18N.t('g_empty_none')));
     seenNodes=new Set();return;
   }
   const G=v.graph;let nodes=G.nodes;const cut=nodes.length>13;if(cut)nodes=nodes.slice(-13);
@@ -124,7 +124,7 @@ function renderGraph(v){
   const maxPills=Math.max(1,...nodes.map(n=>Math.min(3,(G.tips[n.sha]||[]).length)));
   const sx=64,padL=34,padT=26+maxPills*21,ly=48,lanes=Math.max(...nodes.map(n=>n.lane))+1;
   const W=padL*2+(nodes.length-1)*sx+30,H=padT+(lanes-1)*ly+46;
-  const svg=S_('svg',{viewBox:'0 0 '+W+' '+H,width:Math.max(W,300),height:H,role:'img','aria-label':'Mapa de commits'});
+  const svg=S_('svg',{viewBox:'0 0 '+W+' '+H,width:Math.max(W,300),height:H,role:'img','aria-label':I18N.t('g_aria')});
   const X=i=>padL+i*sx,Y=l=>padT+l*ly;
   nodes.forEach((n,i)=>{
     n.parents.forEach((p,pi)=>{
