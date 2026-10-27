@@ -289,7 +289,7 @@ Eröffne ein *Issue* mit deiner Idee oder sende einen *Pull Request*. Führe vor
     <!-- Card do Criador (Bruno) -->
     <td align="center" width="220" style="padding: 15px; border: 1px solid #FFD700; border-radius: 8px;">
       <a href="https://github.com/bruno-a-dias">
-        <img src="https://github.com/bruno-a-dias.png" width="120px;" style="border-radius: 50%; border: 3px solid #FFD700;" alt="Foto de Bruno Assunção Dias"/><br />
+        <img src="../assets/heroes/bruno-a-dias.svg" width="150" height="150" alt="Bruno Assunção Dias"/><br />
         <br />
         <sub><b style="font-size: 16px; color: #FFFFFF;">Bruno Assunção Dias</b></sub>
       </a><br />

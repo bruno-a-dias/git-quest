@@ -1,0 +1,17 @@
+<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="bruno-a-dias">
+<!-- placeholder -->
+  <title>bruno-a-dias</title>
+  <defs>
+    <clipPath id="circleClip"><circle cx="75" cy="75" r="55"/></clipPath>
+  </defs>
+  <circle cx="75" cy="75" r="55" fill="#16213f"/>
+  <g clip-path="url(#circleClip)" fill="#3a4a7a"><circle cx="75" cy="62" r="20"/><ellipse cx="75" cy="128" rx="40" ry="34"/></g>
+  <!-- Anel exterior: gira para a direita -->
+  <circle cx="75" cy="75" r="62" fill="none" stroke="#FFD700" stroke-width="4" stroke-dasharray="70 40 20 40" opacity="0.9">
+    <animateTransform attributeName="transform" type="rotate" from="0 75 75" to="360 75 75" dur="4s" repeatCount="indefinite"/>
+  </circle>
+  <!-- Anel interior: gira para a esquerda, mais rápido -->
+  <circle cx="75" cy="75" r="58" fill="none" stroke="#FFF7B0" stroke-width="2" stroke-dasharray="30 20" opacity="0.6">
+    <animateTransform attributeName="transform" type="rotate" from="360 75 75" to="0 75 75" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

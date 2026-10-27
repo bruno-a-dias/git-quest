@@ -14,7 +14,7 @@
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=Great+Vibes&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap">
 <link rel="stylesheet" href="css/style.css">
 
 </head>
@@ -101,12 +101,14 @@
 
 <div class="diploma" id="diploma" hidden role="dialog" aria-modal="true" data-i18n-attr="aria-label:diploma_aria" aria-label="Diploma Git Quest">
   <div class="cert">
+    <canvas id="certseal" class="certseal" width="300" height="330" aria-hidden="true"></canvas>
     <small data-i18n="cert_small">Certificado de conclusão</small>
     <h2>Git Quest</h2>
     <p data-i18n="cert_to">Este diploma é concedido a</p>
     <div><input class="name" id="certname" type="text" maxlength="60" data-i18n-attr="placeholder:cert_name_ph;aria-label:cert_name_aria" placeholder="Digite seu nome" aria-label="Seu nome"></div>
     <p id="certtxt"></p>
     <div class="certb" id="certb"></div>
+    <div class="sign"><span class="sig">Bruno A. Dias</span><i></i><b>Prof. Me. Bruno A. Dias</b></div>
     <p class="mono" id="certdate" style="font-size:13px"></p>
     <p class="mono certcode"><span data-i18n="cert_code">Código de verificação</span>: <b id="certcode"></b></p>
     <p style="font-size:13px;color:var(--mute)" data-i18n="cert_print">Tire um print desta tela para guardar o seu diploma.</p>

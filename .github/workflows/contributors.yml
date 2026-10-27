@@ -31,6 +31,6 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md i18n/
+          git add README.md i18n/ assets/heroes/
           # Só commita se houver alteração (evita erro caso o contribuidor já exista)
           git diff --quiet && git diff --staged --quiet || (git commit -m "docs: adiciona card de contribuição para @${{ env.PR_AUTHOR }}" && git push)

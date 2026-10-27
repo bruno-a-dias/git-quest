@@ -203,3 +203,23 @@ h1,h2,h3{font-family:var(--font-d);margin:0;text-wrap:balance}
 .cert.prog{text-align:center}.cert.prog h2{font-size:28px}.cert.prog h3{font-size:18px;margin-top:20px}
 .progbox{width:100%;background:var(--term);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:10px;font-size:12px;resize:vertical;overflow-wrap:anywhere;margin-bottom:10px}
 .progmsg{min-height:1.4em;font-size:13px}.progmsg.ok{color:var(--green)}.progmsg.err{color:var(--rose)}
+
+/* ---------- diploma de luxo: moldura dourada e selo ---------- */
+#diploma .cert{
+  border:18px solid transparent;
+  border-image:linear-gradient(135deg,#6b4a10 0%,#f6dc86 14%,#b98a1d 30%,#fff3bf 46%,#9b6f16 62%,#f3d575 80%,#7a5412 100%) 1;
+  background:radial-gradient(120% 90% at 50% 20%,#131d42 0%,#0a1024 70%);
+  outline:none;border-radius:0;
+  box-shadow:0 0 0 2px #3d2a06,inset 0 0 0 2px #3d2a06,inset 0 0 0 14px #0a1024,inset 0 0 0 16px #b98a1d,inset 0 0 0 20px #0a1024,inset 0 0 0 21px #8a6a1c,inset 0 0 60px rgba(0,0,0,.55),0 30px 90px rgba(0,0,0,.75),0 0 60px rgba(251,191,36,.12);
+  padding:40px 38px 34px;
+}
+#diploma .cert h2{background:linear-gradient(135deg,#f6dc86,#b98a1d 45%,#fff3bf 60%,#d9a830);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 0 14px rgba(251,191,36,.35))}
+.certseal{display:block;margin:-6px auto 4px;width:min(150px,44vw);height:auto;filter:drop-shadow(0 8px 14px rgba(0,0,0,.55))}
+.certseal.pop{animation:sealIn .9s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes sealIn{from{transform:scale(.2) rotate(-28deg);opacity:0}60%{opacity:1}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.certseal.pop{animation:none}}
+@media (max-width:480px){#diploma .cert{padding:30px 22px 26px;border-width:14px}}
+.sign{display:grid;justify-items:center;margin:10px auto 6px;width:min(340px,100%)}
+.sign .sig{font-family:'Great Vibes','Brush Script MT','Caveat','Dancing Script',cursive;font-size:44px;line-height:1.1;color:#f6e7b4;text-shadow:0 0 14px rgba(251,191,36,.35)}
+.sign i{display:block;width:100%;height:2px;background:#b98a1d;margin:2px 0 4px}
+.sign b{font-size:14px;color:#e9edf9;font-weight:700}

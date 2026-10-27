@@ -82,7 +82,7 @@ async function playAll(page,lang){
       const [dl]=await Promise.all([page.waitForEvent('download',{timeout:10000}),page.click('#certpng')]);
       const file=path.join(require('os').tmpdir(),'gq-diploma-'+lang+'.png');await dl.saveAs(file);
       const buf=fs.readFileSync(file);
-      if(buf.length<20000||buf.readUInt32BE(16)!==1600||buf.readUInt32BE(20)!==1131)bad(`[${lang}] PNG do diploma inesperado (${buf.length} bytes)`);
+      if(buf.length<20000||buf.readUInt32BE(16)!==1754||buf.readUInt32BE(20)!==1240)bad(`[${lang}] PNG do diploma inesperado (${buf.length} bytes)`);
       if(process.env.KEEP_PNG)fs.copyFileSync(file,path.join(process.env.KEEP_PNG,'diploma-'+lang+'.png'));
       /* exportar */
       await page.click('#certclose');await page.click('#btnProgress');
