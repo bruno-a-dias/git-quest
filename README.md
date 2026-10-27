@@ -21,9 +21,23 @@
   <img alt="Feito para aulas" src="https://img.shields.io/badge/feito%20para-sala%20de%20aula-0a0f1e">
 </p>
 
-**[▶️ Jogar agora](https://bruno-a-dias.github.io/git-quest/)** · **[📚 Como funciona](#-como-funciona-por-dentro)** · **[🧑‍🏫 Para professores](#-para-professores)** · **[🛠️ Rodar localmente](#%EF%B8%8F-rodar-localmente)**
+<a href="https://gitquestgame.vercel.app/"><img alt="Jogar na Vercel" src="https://img.shields.io/badge/%E2%96%B6%EF%B8%8F%20JOGAR%20AGORA-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white"></a>
+<a href="https://bruno-a-dias.github.io/git-quest/"><img alt="Jogar no GitHub Pages" src="https://img.shields.io/badge/%E2%96%B6%EF%B8%8F%20JOGAR%20AGORA-GitHub%20Pages-181717?style=for-the-badge&logo=github&logoColor=white"></a>
+
+**[▶️ Jogar (Vercel)](https://gitquestgame.vercel.app/)** · **[▶️ Jogar (GitHub Pages)](https://bruno-a-dias.github.io/git-quest/)** · **[📚 Como funciona](#-como-funciona-por-dentro)** · **[🧑‍🏫 Para professores](#-para-professores)** · **[🛠️ Rodar localmente](#%EF%B8%8F-rodar-localmente)**
 
 </div>
+
+---
+
+## 🔗 Jogue agora
+
+| Onde | Link |
+|---|---|
+| 🟣 **Vercel** (principal) | [gitquestgame.vercel.app](https://gitquestgame.vercel.app/) |
+| ⚫ **GitHub Pages** (espelho) | [bruno-a-dias.github.io/git-quest](https://bruno-a-dias.github.io/git-quest/) |
+
+Os dois endereços servem exatamente os mesmos arquivos. Se um estiver fora do ar, use o outro.
 
 ---
 
@@ -112,7 +126,7 @@ Também entende `HEAD~n`, `HEAD^`, `HEAD@{n}`, `.gitignore`, aliases (`git confi
 
 Pensado para a sala de aula:
 
-- 🔓 **Modo professor:** abra a página com `#professor` no final do endereço (`.../git-quest/#professor`) para liberar todas as missões, ótimo para demonstrar qualquer assunto ao vivo.
+- 🔓 **Modo professor:** abra a página com `#professor` no final do endereço (`https://gitquestgame.vercel.app/#professor`) para liberar todas as missões, ótimo para demonstrar qualquer assunto ao vivo.
 - 📖 Cada missão indica a **parte do guia** correspondente (Partes 1 a 14), para casar o jogo com o material de referência.
 - 🔁 Pode ser usado como **aquecimento** (10 minutos), **laboratório** ou **tarefa de casa**: o progresso fica salvo no navegador de cada aluno.
 - 🔒 Sem login, sem servidor, sem coleta de dados. Basta hospedar os arquivos estáticos (GitHub Pages, Vercel, Netlify ou um pendrive).
@@ -150,7 +164,8 @@ Roda duas suítes: a do **motor de Git** (mais de 100 verificações de comandos
 1. Envie o repositório para o GitHub.
 2. Vá em **Settings → Pages**.
 3. Em *Build and deployment*, escolha **Deploy from a branch**, branch `main` e pasta `/ (root)`.
-4. Em alguns minutos o jogo estará em `https://SEU-USUARIO.github.io/git-quest/`.
+4. Em alguns minutos o jogo estará em `https://bruno-a-dias.github.io/git-quest/`.
+5. (Opcional) **Vercel:** importe o repositório em [vercel.com/new](https://vercel.com/new), deixe *Framework Preset* em **Other** e sem comando de build. A versão oficial deste projeto está em `https://gitquestgame.vercel.app/`.
 
 ---
 
