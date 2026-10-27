@@ -156,6 +156,7 @@ Designed for the classroom:
 - 🔁 Use it as a **warm-up** (10 minutes), a **lab** or **homework**: progress is saved in each student's browser.
 - 🔒 No login, no server, no data collection. Just host the static files (GitHub Pages, Vercel, Netlify or a USB stick).
 - 🧪 The 26 command missions have an **automatically tested solution** in every language (`npm test`), so no station is impossible.
+- 📊 **Class dashboard:** each student clicks **Progress** and sends you the code; paste everything into [`professor.html`](https://gitquestgame.vercel.app/professor.html) to see the ranking, who finished and where the class gets stuck, with CSV export. The diploma is a downloadable **PNG image** with a verification code that also shows up in the dashboard.
 
 > **Lesson idea:** project the game, play Line 1 with the class, then let each student go at their own pace. Whoever finishes first generates the diploma and helps classmates.
 

@@ -164,7 +164,8 @@ Pensado para a sala de aula:
 - 📖 Cada missão indica a **parte do guia** correspondente (Partes 1 a 14), para casar o jogo com o material de referência.
 - 🔁 Pode ser usado como **aquecimento** (10 minutos), **laboratório** ou **tarefa de casa**: o progresso fica salvo no navegador de cada aluno.
 - 🔒 Sem login, sem servidor, sem coleta de dados. Basta hospedar os arquivos estáticos (GitHub Pages, Vercel, Netlify ou um pendrive).
-- 🧪 As 26 missões de comando têm **solução testada automaticamente** em todos os idiomas (`npm test`), então nenhuma estação fica impossível.
+- 🧪 As 26 missões de comando têm **solução testada automaticamente** em todos os idiomas (`npm test`), e um teste de navegador (`npm run test:e2e`) joga as 32 missões de verdade, então nenhuma estação fica impossível.
+- 📊 **Painel da turma:** cada aluno clica em **Progresso** e envia o código; você cola tudo em [`professor.html`](https://gitquestgame.vercel.app/professor.html) e vê o ranking, quem concluiu e a missão em que a turma mais trava, com exportação em CSV. O diploma sai em **imagem (PNG)** com um código de verificação que também aparece no painel.
 
 > **Sugestão de aula:** projete o jogo, jogue a Linha 1 com a turma e depois deixe cada aluno seguir no próprio ritmo. Quem terminar primeiro gera o diploma e ajuda os colegas.
 
@@ -208,6 +209,7 @@ Roda três suítes: a do **motor de Git** (mais de 100 verificações de comando
 ```
 git-quest/
 ├── index.html              # estrutura da página e ordem dos scripts
+├── professor.html          # painel da turma (ranking, gargalos, CSV)
 ├── css/
 │   └── style.css           # visual "mapa de metrô em papel quadriculado escuro"
 ├── js/
@@ -215,13 +217,18 @@ git-quest/
 │   ├── missions.js         # mundos, missões, quizzes, ranks e conquistas (os DADOS, em português)
 │   ├── i18n.js             # motor de idiomas + bandeiras SVG
 │   ├── lang/               # um arquivo por idioma: en, es, fr, de, it, ru, hi
+│   ├── progress.js         # código de progresso do aluno e código de verificação do diploma
 │   ├── core.js             # preparo da missão e avaliação dos objetivos
 │   ├── ui-panels.js        # HUD, mapa de linhas, áreas do Git, grafo, sons, confete
-│   └── ui-game.js          # terminal, fluxo de missão, dicas, diploma, inicialização
+│   ├── ui-game.js          # terminal, fluxo de missão, dicas, diploma, inicialização
+│   ├── ui-share.js         # exportar/importar progresso e diploma em imagem (PNG)
+│   └── professor.js        # lógica do painel da turma
 ├── tests/
 │   ├── test-engine.js      # testes do simulador de Git
 │   ├── test-missions.js    # toda missão precisa ser completável pela solução
-│   └── test-i18n.js        # todo idioma precisa estar completo e coerente
+│   ├── test-i18n.js        # todo idioma precisa estar completo e coerente
+│   ├── test-progress.js    # código de progresso: formato, adulteração e diploma
+│   └── e2e/                # Playwright: joga as 32 missões no navegador + painel da turma
 ├── i18n/                   # este README em outros idiomas
 ├── docs/                   # capturas de tela usadas neste README
 ├── package.json
@@ -236,9 +243,11 @@ Os scripts são clássicos (sem módulos) e **carregados nesta ordem**, porque c
 <script src="js/missions.js"></script>    <!-- WORLDS, MISSIONS, RANKS, BADGES  -->
 <script src="js/i18n.js"></script>        <!-- I18N (idiomas e bandeiras)      -->
 <script src="js/lang/en.js"></script>     <!-- ...um arquivo por idioma        -->
+<script src="js/progress.js"></script>    <!-- GQP (progresso e diploma)       -->
 <script src="js/core.js"></script>        <!-- startMission, stepMission, ...   -->
 <script src="js/ui-panels.js"></script>   <!-- window.GQ                        -->
 <script src="js/ui-game.js"></script>     <!-- liga tudo e inicia o jogo        -->
+<script src="js/ui-share.js"></script>    <!-- progresso e diploma em PNG       -->
 ```
 
 ### 🔬 O motor de Git

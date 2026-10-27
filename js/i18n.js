@@ -25,7 +25,7 @@ const I18N=(function(){
     term_aria:'Terminal simulado',term_out_aria:'Saída do terminal',term_tag:'terminal simulado',cmd_ph:'digite um comando e aperte Enter',xp_aria:'Experiência',
     foot_html:'Simulador didático: os comandos rodam num Git de mentira dentro da página, nada é gravado no seu computador. Professor? Abra a página com <span class="mono">#professor</span> no final do endereço para liberar todas as missões.',
     cert_small:'Certificado de conclusão',cert_to:'Este diploma é concedido a',cert_name_ph:'Digite seu nome',cert_name_aria:'Seu nome',
-    cert_txt:'por concluir as {0} missões do Git Quest, somando {1} XP, com o título de {2}.',cert_print:'Tire um print desta tela para guardar o seu diploma.',cert_back:'Voltar ao jogo',diploma_aria:'Diploma Git Quest',
+    cert_txt:'por concluir as {0} missões do Git Quest, somando {1} XP, com o título de {2}.',cert_print:'Baixe a imagem para guardar ou entregar ao professor.',cert_back:'Voltar ao jogo',diploma_aria:'Diploma Git Quest',
     level:'Nível {0} · ',next_level:'próximo nível: {0} XP',max_level:'nível máximo',combo:'combo x{0}',line:'Linha {0}',quiz_tag:'quiz',quiz_pre:'Quiz: ',locked:' (bloqueada)',
     badge_toast:'Conquista: {0}',levelup_t:'Subiu de nível!',levelup_s:'Agora você é {0}.',
     a_wd:'Pasta de trabalho',a_wd_empty:'vazia: crie arquivos com echo ou touch',a_st:'Staging',a_norepo:'sem repositório',a_repo:'Repositório local',a_repo_none:'rode git init',
@@ -36,6 +36,7 @@ const I18N=(function(){
     quiz_wrong:'Quase! Pense mais um pouco e tente outra alternativa.',win_quiz:'Resposta certa!',win_mission:'Missão cumprida!',review:'revisão',
     learned:'O que você aprendeu: ',in_guide:'{0} do guia',part:'Parte',parts:'Partes',to:'a',and:'e',
     bonus:'Bônus de +25 XP: sem erros e sem dicas.',next:'Próxima missão',diploma_see:'Ver meu diploma',keep_term:'Continuar no terminal',
+ prog_btn:'Progresso',prog_title:'Salvar ou carregar seu progresso',prog_h:'Meu progresso',prog_intro:'Seu progresso fica só neste navegador. Copie o código abaixo (ou salve o arquivo) para entregar ao professor ou continuar em outro aparelho.',prog_copy:'Copiar código',prog_copied:'Copiado!',prog_file:'Salvar arquivo',prog_import_h:'Carregar progresso',prog_import_ph:'Cole aqui um código de progresso',prog_import_btn:'Carregar',prog_import_confirm:'Confirmar: substituir o progresso atual?',prog_import_ok:'Progresso carregado: {0} XP e {1} missões.',prog_import_bad:'Código inválido. Copie-o novamente por inteiro.',prog_close:'Fechar',cert_png:'Baixar imagem do diploma',cert_png_hint:'Se o download não começar, toque e segure a imagem abaixo para salvar.',cert_code:'Código de verificação',cert_png_alt:'Imagem do diploma',
     banner_mission:'Missão {0} de {1} · {2}',banner_quiz:'O terminal está livre enquanto você pensa. Explore à vontade.',banner_help:'Digite help para ver os comandos. Setas ↑ ↓ repetem comandos e Tab completa.'
   }}};
   let lang='pt';const subs=[];

@@ -156,6 +156,7 @@ Für den Unterricht gemacht:
 - 🔁 Als **Aufwärmübung** (10 Minuten), **Labor** oder **Hausaufgabe** nutzbar: Der Fortschritt wird im Browser jedes Lernenden gespeichert.
 - 🔒 Kein Login, kein Server, keine Datenerhebung. Es genügt, die statischen Dateien zu hosten (GitHub Pages, Vercel, Netlify oder ein USB-Stick).
 - 🧪 Die 26 Befehlsmissionen haben eine **automatisch getestete Lösung** in allen Sprachen (`npm test`), keine Station ist also unlösbar.
+- 📊 **Klassenübersicht:** Jede/r Lernende klickt auf **Fortschritt** und schickt dir den Code; füge alles in [`professor.html`](https://gitquestgame.vercel.app/professor.html) ein und sieh Rangliste, wer fertig ist und wo die Klasse hängen bleibt, mit CSV-Export. Die Urkunde gibt es als **PNG-Bild** mit Prüfcode, der auch in der Übersicht erscheint.
 
 > **Unterrichtsidee:** Projiziere das Spiel, spielt Linie 1 gemeinsam und lass dann alle in ihrem Tempo weitermachen. Wer zuerst fertig ist, erzeugt die Urkunde und hilft den anderen.
 

@@ -6,7 +6,12 @@
   "license": "MIT",
   "author": "Prof. Me. Bruno Assunção Dias",
   "scripts": {
-    "test": "node tests/test-engine.js && node tests/test-missions.js && node tests/test-i18n.js",
-    "start": "npx --yes serve ."
+    "test": "node tests/test-engine.js && node tests/test-missions.js && node tests/test-i18n.js && node tests/test-progress.js",
+    "start": "npx --yes serve .",
+    "test:e2e": "node tests/e2e/play-all.js && node tests/e2e/professor.js",
+    "test:e2e:all": "LANGS=all node tests/e2e/play-all.js && node tests/e2e/professor.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.48.0"
   }
 }

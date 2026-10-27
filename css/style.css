@@ -194,3 +194,12 @@ h1,h2,h3{font-family:var(--font-d);margin:0;text-wrap:balance}
 .lg:hover{opacity:1;transform:translateY(-2px)}
 .lg:focus-visible{outline:2px solid var(--amber);outline-offset:2px;opacity:1}
 .lg[aria-pressed="true"]{opacity:1;border-color:var(--amber);box-shadow:0 0 0 2px rgba(251,191,36,.25)}
+
+/* ---------- progresso e diploma em imagem ---------- */
+.certcode{font-size:13px;color:var(--mute)}.certcode b{color:var(--amber);letter-spacing:.08em}
+.certhint{font-size:13px;color:var(--mute)}
+#certimg{max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px;margin-top:8px}
+.cert .winacts{flex-wrap:wrap}
+.cert.prog{text-align:center}.cert.prog h2{font-size:28px}.cert.prog h3{font-size:18px;margin-top:20px}
+.progbox{width:100%;background:var(--term);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:10px;font-size:12px;resize:vertical;overflow-wrap:anywhere;margin-bottom:10px}
+.progmsg{min-height:1.4em;font-size:13px}.progmsg.ok{color:var(--green)}.progmsg.err{color:var(--rose)}

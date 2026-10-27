@@ -1,0 +1,31 @@
+.pro{max-width:1180px;display:grid;gap:18px}
+.prohead{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.prohead h1{font-size:34px;font-weight:800;letter-spacing:-.02em}
+.sub{color:var(--mute);margin:6px 0 12px;max-width:78ch}.sub.small{font-size:12.5px;margin-top:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.grow{flex:1}
+.filebtn{cursor:pointer}
+.badlist{margin:6px 0 0;padding-left:18px;color:var(--rose);font-size:13px}
+.badlist:empty{display:none}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
+.card b{display:block;font-family:var(--font-d);font-size:30px;line-height:1.1;color:var(--amber)}
+.card span{color:var(--mute);font-size:13px}
+.card.wide b{font-size:18px;color:var(--fg);overflow-wrap:anywhere}
+.chart{display:grid;grid-template-columns:repeat(32,minmax(0,1fr));gap:3px;align-items:end;height:200px;padding-top:6px;border-bottom:1px solid var(--line);position:relative}
+.bar{position:relative;border-radius:3px 3px 0 0;min-height:2px;opacity:.9;cursor:help}
+.bar:hover,.bar:focus-visible{opacity:1;outline:2px solid var(--fg);outline-offset:1px}
+.bar.gap{outline:2px solid var(--rose);outline-offset:1px}
+.bar i{position:absolute;left:50%;top:-18px;transform:translateX(-50%);font-style:normal;font-size:11px;color:var(--mute)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td.who{white-space:normal;overflow-wrap:anywhere;min-width:140px}td.where{white-space:normal;min-width:180px}
+th{color:var(--mute);font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;user-select:none}
+th[aria-sort]{color:var(--amber)}
+th .vh,.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.done td.who::after{content:" 🎓"}
+.pct{display:inline-block;width:70px;height:8px;border-radius:4px;background:var(--panel2);vertical-align:middle;margin-right:8px;overflow:hidden}
+.pct i{display:block;height:100%;background:var(--teal)}
+.x{background:none;border:0;color:var(--dim);font-size:18px;line-height:1;padding:2px 6px}.x:hover{color:var(--rose)}
+@media (max-width:640px){.prohead h1{font-size:26px}.chart{height:150px}}

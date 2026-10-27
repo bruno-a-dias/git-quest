@@ -6,12 +6,32 @@ on:
   pull_request:
 
 jobs:
-  npm-test:
+  unitarios:
+    name: Motor, missões, idiomas e progresso
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Motor de Git, missões e idiomas
-        run: npm test
+      - run: npm test
+
+  navegador:
+    name: Jogo completo no navegador (Chromium)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Joga as 32 missões nos 8 idiomas e testa o painel da turma
+        run: npm run test:e2e:all
+      - name: Guarda os diplomas gerados em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diplomas-png
+          path: /tmp/gq-diploma-*.png
+          if-no-files-found: ignore

@@ -8,7 +8,9 @@ Obrigado por querer ajudar! O projeto é HTML + CSS + JavaScript puro, sem build
 git clone https://github.com/bruno-a-dias/git-quest.git
 cd git-quest
 npm start      # servidor local (ou abra index.html)
-npm test       # motor de Git, 32 missões e idiomas
+npm test       # motor de Git, 32 missões, idiomas e código de progresso
+npm install && npx playwright install chromium
+npm run test:e2e   # joga o jogo todo no navegador (pt e hi); test:e2e:all = 8 idiomas
 ```
 
 ## Onde mexer
@@ -20,6 +22,7 @@ npm test       # motor de Git, 32 missões e idiomas
 | Adicionar um idioma | novo `js/lang/xx.js`, bandeira em `js/i18n.js`, `<script>` em `index.html`, README em `i18n/` |
 | Ajustar o simulador de Git | `js/git-engine.js` (+ teste em `tests/test-engine.js`) |
 | Visual | `css/style.css` |
+| Progresso, diploma ou painel da turma | `js/progress.js`, `js/ui-share.js`, `professor.html`, `js/professor.js` |
 
 ## Regras rápidas
 

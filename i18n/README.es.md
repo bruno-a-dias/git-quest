@@ -156,6 +156,7 @@ Pensado para el aula:
 - 🔁 Úsalo como **calentamiento** (10 minutos), **laboratorio** o **tarea para casa**: el progreso se guarda en el navegador de cada alumno.
 - 🔒 Sin inicio de sesión, sin servidor, sin recogida de datos. Basta con alojar los archivos estáticos (GitHub Pages, Vercel, Netlify o un USB).
 - 🧪 Las 26 misiones de comando tienen una **solución probada automáticamente** en todos los idiomas (`npm test`), así que ninguna estación es imposible.
+- 📊 **Panel de la clase:** cada estudiante pulsa **Progreso** y te envía el código; pégalos todos en [`professor.html`](https://gitquestgame.vercel.app/professor.html) y verás el ranking, quién terminó y en qué misión se atasca la clase, con exportación a CSV. El diploma se descarga como **imagen PNG** con un código de verificación que también aparece en el panel.
 
 > **Idea de clase:** proyecta el juego, juega la Línea 1 con el grupo y luego deja que cada alumno siga a su ritmo. Quien termine primero genera el diploma y ayuda a sus compañeros.
 

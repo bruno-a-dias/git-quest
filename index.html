@@ -45,6 +45,7 @@
       </div>
       <span class="combo" id="combo" hidden></span>
       <button class="btn sm" id="btnSound" aria-pressed="false" data-i18n-attr="title:sound_title" title="Ligar ou desligar os efeitos sonoros">Som: desligado</button>
+      <button class="btn sm" id="btnProgress" data-i18n="prog_btn" data-i18n-attr="title:prog_title" title="Salvar ou carregar seu progresso">Progresso</button>
       <button class="btn sm" id="btnDiploma" data-i18n="diploma_btn" hidden>Ver diploma</button>
       <button class="btn sm" id="btnReset" data-i18n-attr="title:reset_title" title="Apaga o progresso deste navegador" data-i18n="reset">Recomeçar tudo</button>
     </div>
@@ -107,8 +108,23 @@
     <p id="certtxt"></p>
     <div class="certb" id="certb"></div>
     <p class="mono" id="certdate" style="font-size:13px"></p>
+    <p class="mono certcode"><span data-i18n="cert_code">Código de verificação</span>: <b id="certcode"></b></p>
     <p style="font-size:13px;color:var(--mute)" data-i18n="cert_print">Tire um print desta tela para guardar o seu diploma.</p>
-    <div class="winacts" style="justify-content:center;margin-top:14px"><button class="btn pri" id="certclose" data-i18n="cert_back">Voltar ao jogo</button></div>
+    <div class="winacts" style="justify-content:center;margin-top:14px"><button class="btn pri" id="certpng" data-i18n="cert_png">Baixar imagem do diploma</button><button class="btn" id="certclose" data-i18n="cert_back">Voltar ao jogo</button></div>
+    <div id="certpreview" hidden><p class="certhint" data-i18n="cert_png_hint">Se o download não começar, toque e segure a imagem abaixo para salvar.</p><img id="certimg" alt="Imagem do diploma" data-i18n-attr="alt:cert_png_alt"></div>
+  </div>
+</div>
+
+<div class="diploma" id="progress" hidden role="dialog" aria-modal="true" aria-labelledby="progh">
+  <div class="cert prog">
+    <h2 id="progh" data-i18n="prog_h">Meu progresso</h2>
+    <p data-i18n="prog_intro">Seu progresso fica só neste navegador.</p>
+    <textarea id="progcode" class="progbox mono" readonly rows="4" spellcheck="false"></textarea>
+    <div class="winacts" style="justify-content:center"><button class="btn pri" id="progcopy" data-i18n="prog_copy">Copiar código</button><button class="btn" id="progfile" data-i18n="prog_file">Salvar arquivo</button></div>
+    <h3 data-i18n="prog_import_h">Carregar progresso</h3>
+    <textarea id="progin" class="progbox mono" rows="3" spellcheck="false" data-i18n-attr="placeholder:prog_import_ph" placeholder="Cole aqui um código de progresso"></textarea>
+    <div class="winacts" style="justify-content:center"><button class="btn" id="progload" data-i18n="prog_import_btn">Carregar</button><button class="btn" id="progclose" data-i18n="prog_close">Fechar</button></div>
+    <p id="progmsg" class="progmsg" role="status"></p>
   </div>
 </div>
 
@@ -122,8 +138,10 @@
 <script src="js/lang/it.js"></script>
 <script src="js/lang/ru.js"></script>
 <script src="js/lang/hi.js"></script>
+<script src="js/progress.js"></script>
 <script src="js/core.js"></script>
 <script src="js/ui-panels.js"></script>
 <script src="js/ui-game.js"></script>
+<script src="js/ui-share.js"></script>
 </body>
 </html>

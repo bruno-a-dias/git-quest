@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Git Quest · Painel da turma</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0a0f1e">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/professor.css">
+</head>
+<body>
+<div class="wrap pro">
+  <header class="prohead">
+    <div>
+      <h1>Painel da turma</h1>
+      <p class="sub">Cole os códigos de progresso dos alunos e veja ranking, quem concluiu e onde a turma trava. Tudo roda no seu navegador: nada é enviado para servidor algum.</p>
+    </div>
+    <a class="btn" href="index.html">← Voltar ao jogo</a>
+  </header>
+
+  <section class="panel" aria-labelledby="addh">
+    <h3 id="addh">1. Adicionar alunos</h3>
+    <p class="sub">Cada aluno abre o jogo, clica em <b>Progresso</b> e envia o código (WhatsApp, e-mail, Teams, arquivo). Pode colar tudo de uma vez, até com o texto das mensagens: o painel acha os códigos sozinho. Se o mesmo aluno enviar de novo, o painel atualiza a linha dele.</p>
+    <textarea id="paste" class="progbox mono" rows="5" spellcheck="false" placeholder="GQ1.eyJ2IjoxLC4uLg.k3x9a ..."></textarea>
+    <div class="row">
+      <button class="btn pri" id="add">Adicionar à turma</button>
+      <label class="btn filebtn">Abrir arquivos .txt <input type="file" id="files" accept=".txt,.gqp,text/plain" multiple hidden></label>
+      <span class="grow"></span>
+      <button class="btn" id="csv">Exportar CSV</button>
+      <button class="btn" id="clear">Limpar turma</button>
+    </div>
+    <p id="msg" class="progmsg" role="status"></p>
+    <ul id="bad" class="badlist"></ul>
+  </section>
+
+  <section class="cards" id="cards" aria-label="Resumo da turma"></section>
+
+  <section class="panel" aria-labelledby="chh">
+    <h3 id="chh">2. Onde a turma trava</h3>
+    <p class="sub">Quantos alunos concluíram cada missão. A cor é a do mundo. A missão com a maior queda em relação à anterior fica marcada.</p>
+    <div class="chart" id="chart" role="img" aria-label="Alunos que concluíram cada missão"></div>
+    <p id="chartnote" class="sub"></p>
+  </section>
+
+  <section class="panel" aria-labelledby="th">
+    <h3 id="th">3. Alunos</h3>
+    <div class="tablewrap">
+      <table id="tbl">
+        <thead><tr>
+          <th data-k="n" scope="col">Aluno</th><th data-k="x" scope="col" class="num">XP</th><th data-k="pct" scope="col" class="num">%</th>
+          <th data-k="cnt" scope="col" class="num">Missões</th><th data-k="rk" scope="col">Título</th><th data-k="next" scope="col">Está em</th>
+          <th data-k="code" scope="col">Cód. diploma</th><th data-k="t" scope="col">Enviado</th><th scope="col"><span class="vh">Remover</span></th>
+        </tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p id="empty" class="sub">Nenhum aluno ainda. Cole os códigos acima.</p>
+    <p class="sub small">Aviso honesto: o código é conferido (formato, checksum e soma de XP), o que pega cópia incompleta e edição acidental, mas como o jogo roda no navegador do aluno, alguém muito determinado conseguiria forjar um. Para avaliação com nota, confira também o código do diploma e peça o diploma em imagem.</p>
+  </section>
+</div>
+
+<script src="js/missions.js"></script>
+<script src="js/progress.js"></script>
+<script src="js/professor.js"></script>
+</body>
+</html>
