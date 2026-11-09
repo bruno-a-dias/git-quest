@@ -11,6 +11,7 @@
   <a href="i18n/README.it.md">🇮🇹 Italiano</a> ·
   <a href="i18n/README.ru.md">🇷🇺 Русский</a> ·
   <a href="i18n/README.hi.md">🇮🇳 हिन्दी</a>
+  <a href="i18n/README.jp.md">jp Japão</a> ·
 </p>
 
 # 🚇 Git Quest
